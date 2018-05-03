@@ -17,10 +17,12 @@ try {
         cert: fs.readFileSync('https/cert.pem')
     };
     server = require('https').createServer(sslOptions, app);
+    console.log('SERVER HTTPS');
 }
 catch (err) {
     console.log('Error con el certificado para HTTPS :' + err);
     server = require('https').createServer(app);
+    console.log('SERVER HTTP');
 }
 
 global.io = require('socket.io').listen(server, { 'transports': ['websocket', 'polling'] });
@@ -96,4 +98,5 @@ app.use("/", express.static(__dirname + "/public/"));
 server.listen(process.env.PORT || global.config.Puerto, process.env.IP || "0.0.0.0", function () {
     var addr = server.address();
     console.log("Chat server listening at", addr.address + ":" + addr.port);
+    console.log(addr);
 });
