@@ -13,8 +13,8 @@ const express = require('express'),
 var server = null;
 try {
     var sslOptions = {
-        key: fs.readFileSync('key.pem'),
-        cert: fs.readFileSync('cert.pem')
+        key: fs.readFileSync('https/key.pem'),
+        cert: fs.readFileSync('https/cert.pem')
     };
     server = require('https').createServer(sslOptions, app);
 }
