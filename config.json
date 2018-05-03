@@ -1,0 +1,8 @@
+﻿{
+  "Puerto": 3000,
+  "TotalMessagesSaved": 20,
+  "Url": "localhost",
+  "dbUrl": "mongodb://localhost/",
+  "pageSize": 10,
+  "debug" : true
+}
