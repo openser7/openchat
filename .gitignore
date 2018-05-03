@@ -2,4 +2,6 @@
 /node_modules
 /obj
 /typings
-./DS_Store
+.DS_Store
+public/.DS_Store
+
