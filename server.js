@@ -8,28 +8,37 @@ const express = require('express'),
     request = require('request'),
     mongoose = require('mongoose'),
     multiparty = require("multiparty");
+/**
+ * Cargar Configuraciones
+ */
+global.config = require("./config.json");
 
-/* Crear el servidor */
+/**
+ * Levantar el Servidor
+ */
 var server = null;
 try {
-    var sslOptions = {
-        key: fs.readFileSync('https/key.pem'),
-        cert: fs.readFileSync('https/cert.pem')
-    };
-    server = require('https').createServer(sslOptions, app);
-    console.log('SERVER HTTPS');
+    if(global.config.SSL){
+        var sslOptions = {
+            key: fs.readFileSync('https/key.pem'),
+            cert: fs.readFileSync('https/cert.pem')
+        };
+        server = require('https').createServer(sslOptions, app);
+        console.log('SERVER HTTPS');
+    } else {
+        server = require('http').createServer(app);
+        console.log('SERVER HTTP');
+    }
 }
 catch (err) {
     console.log('Error con el certificado para HTTPS :' + err);
-    server = require('https').createServer(app);
+    server = require('http').createServer(app);
     console.log('SERVER HTTP');
 }
 
 global.io = require('socket.io').listen(server, { 'transports': ['websocket', 'polling'] });
 
 global.mongoose = mongoose;
-global.config = require("./config.json");
-global.clientAppConfigs = {};
 
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');

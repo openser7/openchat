@@ -19,24 +19,6 @@ exports.getSystemConfiguration = function(socket, callback){
 	}	
 }
 
-/*
- * Actualiza la configuracion de las variables de sistema
- */
-exports.updateSystemConfiguration = function(req, res) {
-	var newVersion = false;
-	if(err) res.send(500, err.message);
-	else if(response && response.statusCode == 200){
-		var responseJson = JSON.parse(req.body);
-		if(responseJson.Version != clientAppConfigs.Version)
-			newVersion = true;
-		for (key in responseJson) {
-            if (clientAppConfigs.hasOwnProperty(key)) {
-            	clientAppConfigs[key] = responseJson[key];
-            }
-        };        
-	    res.status(200).jsonp(true);
-	}
-}
 
 /*
  * Checa las licencias por Enterprise
@@ -68,7 +50,7 @@ exports.licensesAvailable = function(req, res) {
     	if(err) res.send(500, err.message);
     	console.log('GET /Licencias')
     	var resValue = { available : true };
-    	if (result && result.length < clientAppConfigs.Licencia) //Ya no existe esta  propiedad
+    	if (result && result.length ) //Ya no existe esta  propiedad
     		resValue.available = true;
     	else
     		resValue.available = false;

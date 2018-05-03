@@ -4,6 +4,6 @@
   "Url": "localhost",
   "dbUrl": "mongodb://localhost/",
   "pageSize": 10,
-  "SSL" : true,
+  "SSL" : false,
   "debug" : true
 }
