@@ -12,7 +12,7 @@ Ext.define('OpenSer.controller.SocketController', {
         }
 
         socket = io.connect($NODE_SERVER, {
-            'query': 'serial=' + $NODE_SERIAL + '&enterprise=' + $ENTERPRISE,
+            'query': 'enterprise=' + $ENTERPRISE,
             'transports': ['websocket'],
             'timeout': 3000, //3 Seg para timeout
             'forceNew': true,

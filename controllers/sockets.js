@@ -74,7 +74,6 @@ io.sockets.on('connection', function (socket) {
                 console.log(error);
                 socket.disconnect(0); //Desconectar si no exite el serial
             } else {
-                //if( responseJson.serial === socket.handshake.query.serial)
                 if (responseJson.Nombre === socket.handshake.query.enterprise) {
                     socket.join(responseJson.Nombre);  //Agregarlo al ROOM segun el nombre de empresa
                     socket.configEnterprise = responseJson;
@@ -107,7 +106,7 @@ io.sockets.on('connection', function (socket) {
                         }
                     });
                 } else {
-                    socket.disconnect(0); //Desconectar si no exite el serial
+                    socket.disconnect(0); //Desconectar sin no existe esa empresa en la base de datos
                 }
             }
         });

@@ -6,7 +6,7 @@ var request = require('request');
  * Ccarga la configuracion Inicial
  */
 exports.getSystemConfiguration = function(socket, callback){
-	if(socket.handshake.query.enterprise && socket.handshake.query.serial){
+	if(socket.handshake.query.enterprise ){
 		request('http://52.207.170.18/Empresarial/Servicio.svc/json/Consultar?nombre=' + socket.handshake.query.enterprise, function (error, response, body) {
 			if(error) console.log('error:', error);
 			else if(response && response.statusCode == 200){
