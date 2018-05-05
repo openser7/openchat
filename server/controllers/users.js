@@ -252,8 +252,6 @@ exports.deleteSocketMobile = function (localStorage, callback) {
     });
 };
 
-
-
 function inRoom(idSocket, chanelRoom) {
     var chanelRoom = 'publico';
     //Obtiene todos los socket conectados

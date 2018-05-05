@@ -21,17 +21,18 @@ function getOneLineText(text) {
         .replace(/\\/g, "&#92;").replace(/\t/g, "").replace(/&nbsp;/g, " ").replace('\u000A', '');
 }
 
-
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
 exports.sendNotification = function (req, res) {
-
-
-    var usersToNotify = req.body.CveUsuario;
+    var usersToNotify = req.body._id;
     var notificationData = req.body;
 
     usersToNotify.map(function (item) {
-        // userModel.findById(item, function (err, user) {
-        userModel.find({ CveUsuario: item }, function (err, users) {
-
+        userModel.findById(item, function (err, user) {
+            //userModel.find({ CveUsuario: item }, function (err, users) {
             if (users.length < 1) {
                 return;
             }
@@ -77,16 +78,7 @@ exports.sendNotification = function (req, res) {
                         if (error != null) {
                             console.log('code:' + code + ' |error:' + error + ' |res:' + body + ' |params:' + b);
                         }
-                        //    res.write(response.statusCode);
-
-                        //    } else {
-                        //response.end(error);
-                        //    res.write(error);
-                        //  }
-                        //res.end();
                     });
-
-
                 }
 
             }

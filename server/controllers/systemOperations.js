@@ -23,7 +23,6 @@ exports.getSystemConfiguration = function(socket, callback){
 /*
  * Checa las licencias por Enterprise
  */
-
 exports.getTotalInstances = function(room, socket){
 	userModel.find({ 'Status': {$ne: 0}, 'IdAgente': {$ne: '0'}, 'room' : room}, function(err, result){
 		if(result && result.length){
@@ -32,12 +31,6 @@ exports.getTotalInstances = function(room, socket){
 				limit: socket.configEnterprise.Licencia,
 			});
 		}
-		// else { TEORIA No debe enviar esto, pues nadie esta conectado.
-		// 	io.sockets.emit('total instance', {
-		// 		total: 0,
-		// 		limit: socket.configEnterprise.Licencia,
-		// 	});
-		// }
 	});
 }
 /**

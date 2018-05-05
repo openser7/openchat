@@ -11,7 +11,7 @@ const express = require('express'),
 /**
  * Cargar Configuraciones
  */
-global.config = require("./config.json");
+global.config = require("./../config/config.json");
 
 /**
  * Levantar el Servidor
@@ -20,8 +20,8 @@ var server = null;
 try {
     if(global.config.SSL){
         var sslOptions = {
-            key: fs.readFileSync('https/key.pem'),
-            cert: fs.readFileSync('https/cert.pem')
+            key: fs.readFileSync('./../config/https/key.pem'),
+            cert: fs.readFileSync('./../config/https/cert.pem')
         };
         server = require('https').createServer(sslOptions, app);
         console.log('SERVER HTTPS');
@@ -101,7 +101,7 @@ var router = express.Router();
 app.use(router);
 var routes = require('./controllers/routes');
 app.use('/', routes);
-app.use("/", express.static(__dirname + "/public/"));
+app.use("/", express.static(__dirname + "/client/public/"));
 
 //Revisar el servidor
 server.listen(process.env.PORT || global.config.Puerto, process.env.IP || "0.0.0.0", function () {
