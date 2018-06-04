@@ -1,5 +1,5 @@
 ﻿{
-  "Puerto": 3000,
+  "Puerto": 8080,
   "TotalMessagesSaved": 20,
   "Url": "localhost",
   "dbUrl": "mongodb://localhost/",
