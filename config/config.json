@@ -1,9 +1,17 @@
-﻿{
-  "Puerto": 8080,
-  "TotalMessagesSaved": 20,
-  "Url": "localhost",
+{
+  "puerto": 8080,
+  "url": "localhost",
   "dbUrl": "mongodb://localhost/",
   "pageSize": 10,
   "SSL" : false,
-  "debug" : true
+  "debug" : true,
+  "sqlConfig" : {
+    "user": "fenix",
+    "password": "Open.001",
+    "server": "", 
+    "database": "Empresarial",  
+    "options": {
+      "encrypt": true
+    }
+  }
 }

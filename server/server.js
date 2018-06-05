@@ -1,5 +1,5 @@
 /* Librerias requeridas */
-const express = require('express'),
+var express = require('express'),
     crypto = require('crypto'),
     app = express(),
     bodyParser = require("body-parser"),
@@ -7,7 +7,9 @@ const express = require('express'),
     fs = require("fs"),
     request = require('request'),
     mongoose = require('mongoose'),
-    multiparty = require("multiparty");
+    multiparty = require("multiparty"),
+    sql = require('mssql');
+
 /**
  * Cargar Configuraciones
  */
@@ -96,6 +98,16 @@ global.Controllers = {
 
 var socketIo = require('./controllers/sockets');
 
+
+// connect to your database
+global.sql = sql;
+sql.connect(global.config.sqlConfig, function(err) {
+	if (err){
+		console.log(err);// create Request object
+	}
+	
+});
+		
 // Configuara el ruteo de todos los servicios y entidades de la app ... signar las rutas a los metodos de los controllers
 var router = express.Router();
 app.use(router);
@@ -104,7 +116,7 @@ app.use('/', routes);
 app.use("/", express.static(__dirname + "/client/public/"));
 
 //Revisar el servidor
-server.listen(process.env.PORT || global.config.Puerto, process.env.IP || "0.0.0.0", function () {
+server.listen(process.env.PORT || global.config.puerto, process.env.IP || "0.0.0.0", function () {
     var addr = server.address();
     console.log("Chat server listening at", addr.address + ":" + addr.port);
     console.log(addr);
