@@ -39,7 +39,7 @@ exports.getTotalInstances = function(room, socket) {
 		if (result && result.length) {
 			io.sockets.emit('total instance', {
 				total: result.length,
-				limit: socket.configEnterprise.Licencia,
+				limit: socket.configEnterprise.Licencias,
 			});
 		}
 	});

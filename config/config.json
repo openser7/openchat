@@ -8,7 +8,7 @@
   "sqlConfig" : {
     "user": "fenix",
     "password": "Open.001",
-    "server": "", 
+    "server": "fenix.ckclacn0gw6r.us-east-1.rds.amazonaws.com", 
     "database": "Empresarial",  
     "options": {
       "encrypt": true
