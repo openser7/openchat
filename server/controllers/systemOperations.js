@@ -9,11 +9,13 @@ exports.getInfoEmpresa = function(req, res)  {
 		console.log(req.query.query);
 		var query = ' select Cliente.*, IdGoogle as GoogleId, Google.Secreto as GoogleSecret,'+
 					' FolderWeb '+
-					' SAML, Google, LogOut, LogOutSAML'+
+					' SAML, Google, LogOut, LogOutSAML, '+
+					' IdTipoVersion, Version.Comercial as Version, Version.Nombre as VersionApp'+
 					' from Cliente'+
 					' left join Google on Google.IdCliente = Cliente.IdCliente'+
 					' left join Cognito on Cognito.IdCliente = Cliente.IdCliente'+
 					' left join Configuracion on Configuracion.IdCliente = Cliente.IdCliente '+
+					' left join Version on Version.IdVersion = Cliente.IdVersion '+
 					" where Cliente.Nombre = '"+req.query.empresa+"' ";
 		var request = new global.sql.Request();
 		request.query(query, function(err, resultado) {
