@@ -34,12 +34,18 @@ exports.getSystemConfiguration = function(socket, callback) {
 /*
  * Checa las licencias por Enterprise
  */
-exports.getTotalInstances = function(room, socket) {
+exports.getTotalInstances = function(room, nombreEmpresa, limiteLicencias) {
+	var roomEntrada = room;
 	userModel.find({ 'Status': { $ne: 0 }, 'IdAgente': { $ne: '0' }, 'room': room }, function(err, result) {
-		if (result && result.length) {
-			io.sockets.emit('total instance', {
-				total: result.length,
-				limit: socket.configEnterprise.Licencias,
+		if (result && result.length > 0 ) {
+			Object.keys(io.sockets.connected).forEach(function(key) {
+			  var socket = io.sockets.connected[key];
+			  if(socket.rooms[roomEntrada] != null){
+					socket.emit('total instance', {
+							total: result.length,
+							limit: limiteLicencias,
+					});
+			  }
 			});
 		}
 	});

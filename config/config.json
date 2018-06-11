@@ -1,0 +1,17 @@
+{
+  "puerto": 8080,
+  "url": "localhost",
+  "dbUrl": "mongodb://localhost/",
+  "pageSize": 10,
+  "SSL" : false,
+  "debug" : true,
+  "sqlConfig" : {
+    "user": "fenix",
+    "password": "Open.001",
+    "server": "fenix.ckclacn0gw6r.us-east-1.rds.amazonaws.com", 
+    "database": "Empresarial",  
+    "options": {
+      "encrypt": true
+    }
+  }
+}

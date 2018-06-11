@@ -24,33 +24,6 @@ io.sockets.on('connection', function (socket) {
         socket.emit('update application', validateVersion(currentVersion));
     });
 
-    /*
-     * Evento para log off... se eliminan y desconectan todos los sockets de usuario.
-     */
-
-    socket.on('logoff', function (userData, browserTabInfo) {
-        var socket = this;
-        if (global.config.debug) console.log('Cierre de Session - ' + socket.Model.CveUsuario);
-        if (socket && socket.Model.CveUsuario) {
-            global.Controllers.user.logOff(userData, socket, function (err, user) {
-                if (err) console.log("Error:  " + err);
-                else {
-                    if (user && user.sockets.length > 0) { //Emitir la orden de cerrar session a todas las pestañas del navegador                            
-                        for (var i = 0; i < user.sockets.length; i++) {
-                            socket.to(user.sockets[i]).emit('cierre de session');
-                        }
-                        //Emitir el cambio de estatos a desconectado
-                        io.sockets.emit('update user status', { 'userData': user, 'oldStatus': userData.Status });
-                        global.Controllers.systemOperations.getTotalInstances(user.room, socket);
-                    } else {
-                        socket.disconnect();
-                    }
-                }
-            });
-        } else {
-            socket.disconnect();
-        }
-    });
     /**
      * TODO FALTA RECIBIR EL ID..
      */
@@ -91,7 +64,7 @@ io.sockets.on('connection', function (socket) {
                             // VARIABLES AUXILIARPES PARA SABER A QUIEN PERTENECE EL SOCKET
                             socket.Model = userModel;
                             if (global.config.debug) console.log('Enviar el total de instancias ' + userModel.NombreCompleto);
-                            global.Controllers.systemOperations.getTotalInstances(userModel.room, socket);
+                            global.Controllers.systemOperations.getTotalInstances(userModel.room, socket.configEnterprise.Nombre, socket.configEnterprise.Licencias);
                             //DESPUES DE ACTUALIZAR LA INFORMACION DEL USUARIO SE ENVIARA LA LISTA DE USUARIOS DE LA EMPRESA QUE ESTEN "ONLINE"
                             if (global.config.debug) console.log('Enviar lista de usuarios de su ROOM a ' + userModel.NombreCompleto);
                             global.Controllers.user.getUsersChatList(userModel, function (err, usersList) {
@@ -267,10 +240,36 @@ io.sockets.on('connection', function (socket) {
                     if (user.disconnect) { //Si se cerro el ultimo socket avisar que esta como desconectado
                         if (user.sockets.length <= 0)
                             io.sockets.emit('update user status', { userData: user._doc, oldStatus: statusAnt });
-                        global.Controllers.systemOperations.getTotalInstances(user.room, socket);
+                            global.Controllers.systemOperations.getTotalInstances(user.room, socket.configEnterprise.Nombre, socket.configEnterprise.Licencias);
                     }
                 }
             });
+        }
+    });
+    /*
+     * Evento para log off... se eliminan y desconectan todos los sockets de usuario.
+     */
+    socket.on('logoff', function (userData, browserTabInfo) {
+        var socket = this;
+        if (global.config.debug) console.log('Cierre de Session - ' + socket.Model.CveUsuario);
+        if (socket && socket.Model.CveUsuario) {
+            global.Controllers.user.logOff(userData, socket, function (err, user) {
+                if (err) console.log("Error:  " + err);
+                else {
+                    if (user && user.sockets.length > 0) { //Emitir la orden de cerrar session a todas las pestañas del navegador                            
+                        for (var i = 0; i < user.sockets.length; i++) {
+                            socket.to(user.sockets[i]).emit('cierre de session');
+                        }
+                        //Emitir el cambio de estatos a desconectado
+                        //io.sockets.emit('update user status', { 'userData': user, 'oldStatus': userData.Status });
+                        //global.Controllers.systemOperations.getTotalInstances(user.room, socket.configEnterprise.Licencias);
+                    } else {
+                        socket.disconnect();
+                    }
+                }
+            });
+        } else {
+            socket.disconnect();
         }
     });
 });
