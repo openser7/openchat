@@ -6,9 +6,9 @@
   "SSL" : false,
   "debug" : true,
   "sqlConfig" : {
-    "user": "fenix",
-    "password": "Open.001",
-    "server": "fenix.ckclacn0gw6r.us-east-1.rds.amazonaws.com", 
+    "user": "",
+    "password": "",
+    "server": "", 
     "database": "Empresarial",  
     "options": {
       "encrypt": true
