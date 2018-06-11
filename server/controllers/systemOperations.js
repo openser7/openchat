@@ -7,7 +7,14 @@ var request = require('request');
 exports.getInfoEmpresa = function(req, res)  {
 	if (req.query && req.query.empresa) {
 		console.log(req.query.query);
-		var query = "select * from Cliente where Nombre = '"+req.query.empresa+"' ";
+		var query = ' select Cliente.*, IdGoogle as GoogleId, Google.Secreto as GoogleSecret,'+
+					' FolderWeb '+
+					' SAML, Google, LogOut, LogOutSAML'+
+					' from Cliente'+
+					' left join Google on Google.IdCliente = Cliente.IdCliente'+
+					' left join Cognito on Cognito.IdCliente = Cliente.IdCliente'+
+					' left join Configuracion on Configuracion.IdCliente = Cliente.IdCliente '+
+					" where Cliente.Nombre = '"+req.query.empresa+"' ";
 		var request = new global.sql.Request();
 		request.query(query, function(err, resultado) {
 			if(err){
