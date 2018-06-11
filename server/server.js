@@ -113,7 +113,7 @@ var router = express.Router();
 app.use(router);
 var routes = require('./controllers/routes');
 app.use('/', routes);
-app.use("/", express.static(__dirname + "/client/public/"));
+//app.use("/", express.static(__dirname + "/client/public/"));
 
 //Revisar el servidor
 server.listen(process.env.PORT || global.config.puerto, process.env.IP || "0.0.0.0", function () {

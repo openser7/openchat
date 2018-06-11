@@ -2,19 +2,31 @@ var mongoose = require('mongoose');
 var userModel = mongoose.model('user');
 var request = require('request');
 /*
- * Carga la configuracion Inicial
+ * Carga la informacion de una empresa "WebService"
+ */
+exports.getInfoEmpresa = function(req, res)  {
+	if (req.query && req.query.empresa) {
+		console.log(req.query.query);
+		var query = "select * from Cliente where Nombre = '"+req.query.empresa+"' ";
+		var request = new global.sql.Request();
+		request.query(query, function(err, resultado) {
+			if(err){
+				res.send(500, err);
+			}
+			if (resultado.recordset.length > 0) {
+				var cliente = resultado.recordset[0];
+				res.status(200).jsonp(cliente);
+			}
+		});
+	} else {
+		res.send(500, 'Peticion no valida');
+	}
+}
+/*
+ * Carga la configuracion Inicial (socket.io ) del evento Connect
  */
 exports.getSystemConfiguration = function(socket, callback) {
 	if (socket.handshake.query.enterprise) {
-		// request('http://52.207.170.18/Empresarial/Servicio.svc/json/Consultar?nombre=' + socket.handshake.query.enterprise, function (error, response, body) {
-		// 	if(error) console.log('error:', error);
-		// 	else if(response && response.statusCode == 200){
-		// 		var responseJson = JSON.parse(body);
-		// 		return callback(responseJson, false);
-		// 	} else {			
-		// 		return callback(null, error);		
-		// 	}
-		// });
 		var query = "select * from Cliente where Nombre = '"+socket.handshake.query.enterprise+"' ";
 		var request = new global.sql.Request();
 			// query to the database and get the records
