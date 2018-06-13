@@ -8,7 +8,9 @@ var express = require('express'),
     request = require('request'),
     mongoose = require('mongoose'),
     multiparty = require("multiparty"),
-    sql = require('mssql');
+    sql = require('mssql'),
+    helmet = require('helmet'),
+    frameguard = require('frameguard');
 
 /**
  * Cargar Configuraciones
@@ -52,6 +54,19 @@ app.use(function (req, res, next) {
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(methodOverride());
+//SEGURIDAD
+app.use(helmet());
+app.use(helmet.referrerPolicy({ policy: 'same-origin' }))// Referer
+app.disable('x-powered-by');
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"],
+    styleSrc: ["'self'", 'openser.com']
+  },
+}));
+app.use(frameguard({ action: 'sameorigin' }))
+
+
 
 // CONNECTION TO BD
 mongoose.Promise = global.Promise;

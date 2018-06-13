@@ -4,6 +4,6 @@
 /typings
 .DS_Store
 public/.DS_Store
-
+data
 /data
 /config/config.json
