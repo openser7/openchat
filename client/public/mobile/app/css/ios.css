@@ -1,0 +1,1 @@
+.x-ios-native:not(.x-phone.x-landscape){padding-top:0!important}.x-ios-native body{background-color:var(--backgroundCustomed)!important;padding-top:constant(safe-area-inset-top);padding-top:env(safe-area-inset-top)}.x-ios-native body{margin-bottom:constant(safe-area-inset-bottom);margin-bottom:env(safe-area-inset-bottom)}
