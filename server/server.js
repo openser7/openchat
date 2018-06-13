@@ -55,17 +55,21 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(methodOverride());
 //SEGURIDAD
+
 app.use(helmet());
+
 app.use(helmet.referrerPolicy({ policy: 'same-origin' }))// Referer
 app.disable('x-powered-by');
+/*
 app.use(helmet.contentSecurityPolicy({
   directives: {
     defaultSrc: ["'self'"],
     styleSrc: ["'self'", 'openser.com']
   },
 }));
-app.use(frameguard({ action: 'sameorigin' }))
 
+app.use(frameguard({ action: 'sameorigin' }))
+*/
 
 
 // CONNECTION TO BD
@@ -124,11 +128,12 @@ sql.connect(global.config.sqlConfig, function(err) {
 });
 		
 // Configuara el ruteo de todos los servicios y entidades de la app ... signar las rutas a los metodos de los controllers
-var router = express.Router();
-app.use(router);
-var routes = require('./controllers/routes');
-app.use('/', routes);
-//app.use("/", express.static(__dirname + "/client/public/"));
+app.use(express.Router());
+app.use('/', require('./controllers/routes'));
+var path = require('path');
+app.use('/public/',express.static(path.join(__dirname, '../client/public/')));
+app.use('/marketplace',express.static(path.join(__dirname, '../client/public/marketplace')));
+app.use('/mobile/',express.static(path.join(__dirname, '../client/public/mobile')));
 
 //Revisar el servidor
 server.listen(process.env.PORT || global.config.puerto, process.env.IP || "0.0.0.0", function () {
