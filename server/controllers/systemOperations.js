@@ -6,7 +6,7 @@ var request = require('request');
  */
 exports.getInfoEmpresa = function(req, res)  {
 	if (req.query && req.query.empresa) {
-		console.log(req.query.query);
+		console.log("Get Info - "+req.query.empresa);
 		var query = ' select Cliente.*, IdGoogle as GoogleId, Google.Secreto as GoogleSecret,'+
 					' FolderWeb '+
 					' SAML, Google, LogOut, LogOutSAML, '+
