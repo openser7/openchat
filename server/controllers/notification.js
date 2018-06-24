@@ -22,16 +22,18 @@ function getOneLineText(text) {
 }
 
 /**
- * 
+ * Se recibe un objeto notificacion con la informacion de la empresa, idUsuario y texto para generar la notificacion
  * @param {*} req 
  * @param {*} res 
  */
 exports.sendNotification = function (req, res) {
-    var usersToNotify = req.body._id;
-    var notificationData = req.body;
+    var room = req.body.Empresa;
+    var idsUsuario = req.body.IdUsuario;
 
-    usersToNotify.map(function (item) {
-        userModel.findById(item, function (err, user) {
+    var notificationData = req.body;
+    if(room && idsUsuario && idsUsuario.length > 0 )
+    for (idUsuario in idsUsuario) {
+        userModel.find({ "IdUsuario": idsUsuario[idUsuario], "room": room}, function (err, users) {
             //userModel.find({ CveUsuario: item }, function (err, users) {
             if (users.length < 1) {
                 return;
@@ -83,7 +85,7 @@ exports.sendNotification = function (req, res) {
 
             }
         });
-    });
+    };
     var result = { 'yea': true };
     res.status(200).jsonp(result);
 
