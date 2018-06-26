@@ -47,7 +47,7 @@ io.sockets.on('connection', function (socket) {
                 console.log(error);
                 socket.disconnect(0); //Desconectar si no exite el serial
             } else {
-                if (responseJson.Nombre === socket.handshake.query.enterprise) {
+                if (responseJson.Nombre === socket.handshake.query.enterprise) {//el nombre de la empresa de la base de datos coincide con el query enviado en el evento conect.
                     socket.join(responseJson.Nombre);  //Agregarlo al ROOM segun el nombre de empresa
                     socket.configEnterprise = responseJson;
                     global.Controllers.user.connectUser(localStorage, socket, function (err, userModel) { // Si el userModel es Null quiere decir que no hay licencias
@@ -61,6 +61,7 @@ io.sockets.on('connection', function (socket) {
                                 session: userModel.session,
                                 _id: userModel._id
                             });
+                            socket.emit('enterprise',responseJson);
                             // VARIABLES AUXILIARPES PARA SABER A QUIEN PERTENECE EL SOCKET
                             socket.Model = userModel;
                             if (global.config.debug) console.log('Enviar el total de instancias ' + userModel.NombreCompleto);
