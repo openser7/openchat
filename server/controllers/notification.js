@@ -33,10 +33,11 @@ exports.sendNotification = function (req, res) {
     var notificationData = req.body;
     if(room && idsUsuario && idsUsuario.length > 0 )
     for (idUsuario in idsUsuario) {
+        console.log('Send Notifiacion');
         userModel.find({ "IdUsuario": idsUsuario[idUsuario], "room": room}, function (err, users) {
             //userModel.find({ CveUsuario: item }, function (err, users) {
             if (users.length < 1) {
-                return;
+                retu
             }
 
             var user = users[0];
