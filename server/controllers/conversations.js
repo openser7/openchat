@@ -132,7 +132,7 @@ exports.getCountUnseenMsg = function (localStorage, callback) {
 					} else {
 						var mensajesNoLeidos = [];
 						messages.forEach(function (mensaje) {
-							if(mensaje.author.CveUsuario != localStorage.NombreCompleto){ //Siempre y cuando no seas el autor.
+							if(mensaje.author.CveUsuario != localStorage.CveUsuario){ //Siempre y cuando no seas el autor.
 								mensajesNoLeidos.push(mensaje);
 							}
 						});
