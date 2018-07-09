@@ -28,7 +28,37 @@ exports.getInfoEmpresa = function(req, res)  {
 			}
 		});
 	} else {
-		res.send(500, 'Peticion no valida');
+		res.send(500, 'Request Error');
+	}
+}
+exports.clearDataBase = function(req,res){//Metodo para limpiar las licencias y usuarios
+	
+}
+exports.getLicenciasEmpresa = function(req,res){
+	if (req.query && req.query.empresa) {
+		userModel.find({ 'room': req.query.empresa }, function(err, result) {
+			if (err)res.send(500, err);
+			else if (result && result.length > 0 ) {
+				var agentes = [], clientes= [];
+				result.forEach(function(usuario){
+					if(usuario.sockets.length > 0){
+						if(usuario.IdTipoRol != "2")
+							agentes.push({
+								usuario : usuario.NombreCompleto,
+								conexion : usuario.sockets.toString(),
+								rol : usuario.IdTipoRol == "1" ? "Agente" : "ClienteAgente"
+							});
+						else 
+							clientes.push({
+								usuario : usuario.NombreCompleto
+							})
+					}
+				});
+				res.status(200).jsonp([agentes,clientes]);
+			}
+		});
+	} else {
+		res.send(500, 'Request Error');
 	}
 }
 /*
