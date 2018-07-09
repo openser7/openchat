@@ -234,7 +234,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('disconnect', function (reason) {
         var socket = this;
         if (socket.Model) {
-            if (global.config.debug) console.log('disconnect - ' + socket.Model.CveUsuario);
+            if (global.config.debug) console.log('disconnect - ' + socket.Model);
             global.Controllers.user.deleteSocketForUser(socket, function (err, user, socket, statusAnt) {
                 if (err) console.log(err);
                 else {
@@ -252,8 +252,8 @@ io.sockets.on('connection', function (socket) {
      */
     socket.on('logoff', function (userData, browserTabInfo) {
         var socket = this;
-        if (global.config.debug) console.log('Cierre de Session - ' + socket.Model.CveUsuario);
-        if (socket && socket.Model.CveUsuario) {
+        if (global.config.debug) console.log('Cierre de Session - ' + socket.Model);
+        if (socket && socket.Model) {
             global.Controllers.user.logOff(userData, socket, function (err, user) {
                 if (err) console.log("Error:  " + err);
                 else {
