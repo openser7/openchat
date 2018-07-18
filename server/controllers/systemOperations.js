@@ -90,8 +90,10 @@ exports.getTotalInstances = function(room, nombreEmpresa, limiteLicencias, socke
 	userModel.find({ 'Status': { $ne: 0 }, 'IdAgente': { $ne: '0' }, 'room': room }, function(err, result) {
 		
 		if (result && result.length > 0 ) {
-			if(result.length >limiteLicencias ){
-				socketInicioSession.emit('limite license');
+			if(result.length > limiteLicencias ){
+				if(socketInicioSession != null){
+					socketInicioSession.emit('limite license');
+				}
 			} else {
 				Object.keys(io.sockets.connected).forEach(function(key) { //Enviar el total a todos, para que vean que se incremento los usuarios conectados
 				var socket = io.sockets.connected[key];
