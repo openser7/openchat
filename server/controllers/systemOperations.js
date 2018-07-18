@@ -44,17 +44,23 @@ exports.getLicenciasEmpresa = function(req,res){
 					if(usuario.sockets.length > 0){
 						if(usuario.IdTipoRol != "2")
 							agentes.push({
-								usuario : usuario.NombreCompleto,
-								conexion : usuario.sockets.toString(),
-								rol : usuario.IdTipoRol == "1" ? "Agente" : "ClienteAgente"
+								user : usuario.IdUsuario,
+								name : usuario.NombreCompleto,
+								//conexiones : usuario.sockets.toString(),
+								date : usuario.updatedAt,
+								idRol : usuario.IdTipoRol,
 							});
 						else 
 							clientes.push({
-								usuario : usuario.NombreCompleto
+								nombreCompleto : usuario.NombreCompleto,
+								idUsuario : usuario.IdUsuario
 							})
 					}
 				});
-				res.status(200).jsonp([agentes,clientes]);
+				res.status(200).jsonp({
+					'agents': agentes,
+					'customers': clientes
+				});
 			}
 		});
 	} else {
