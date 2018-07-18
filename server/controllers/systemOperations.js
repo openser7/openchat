@@ -83,21 +83,26 @@ exports.getSystemConfiguration = function(socket, callback) {
 
 
 /*
- * Checa las licencias por Enterprise
+ * Checa las licencias por Enterprise, validar si se llega al tope cerrar la session al usuario nuevo...
  */
-exports.getTotalInstances = function(room, nombreEmpresa, limiteLicencias) {
+exports.getTotalInstances = function(room, nombreEmpresa, limiteLicencias, socketInicioSession) {
 	var roomEntrada = room;
 	userModel.find({ 'Status': { $ne: 0 }, 'IdAgente': { $ne: '0' }, 'room': room }, function(err, result) {
+		
 		if (result && result.length > 0 ) {
-			Object.keys(io.sockets.connected).forEach(function(key) {
-			  var socket = io.sockets.connected[key];
-			  if(socket.rooms[roomEntrada] != null){
-					socket.emit('total instance', {
-							total: result.length,
-							limit: limiteLicencias,
-					});
-			  }
-			});
+			if(result.length >limiteLicencias ){
+				socketInicioSession.emit('limite license');
+			} else {
+				Object.keys(io.sockets.connected).forEach(function(key) { //Enviar el total a todos, para que vean que se incremento los usuarios conectados
+				var socket = io.sockets.connected[key];
+				if(socket.rooms[roomEntrada] != null){
+					  socket.emit('total instance', {
+							  total: result.length,
+							  limit: limiteLicencias,
+					  });
+				}
+			  });
+			}
 		}
 	});
 }

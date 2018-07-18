@@ -10,7 +10,8 @@ var express = require('express'),
     multiparty = require("multiparty"),
     sql = require('mssql'),
     helmet = require('helmet'),
-    frameguard = require('frameguard');
+    frameguard = require('frameguard'),
+    mailer = require('nodemailer');
 
 /**
  * Cargar Configuraciones
@@ -114,9 +115,7 @@ global.Controllers = {
     user: require('./controllers/users'),
     conversation: require('./controllers/conversations')
 }
-
 var socketIo = require('./controllers/sockets');
-
 
 // connect to your database
 global.sql = sql;
@@ -124,7 +123,6 @@ sql.connect(global.config.sqlConfig, function(err) {
 	if (err){
 		console.log(err);// create Request object
 	}
-	
 });
 		
 // Configuara el ruteo de todos los servicios y entidades de la app ... signar las rutas a los metodos de los controllers
@@ -134,6 +132,7 @@ var path = require('path');
 app.use('/public/',express.static(path.join(__dirname, '../client/public/')));
 app.use('/marketplace',express.static(path.join(__dirname, '../client/public/marketplace')));
 app.use('/mobile/',express.static(path.join(__dirname, '../client/public/mobile')));
+app.use('/licencias/',express.static(path.join(__dirname, '../client/public/licencias')));
 
 //Revisar el servidor
 server.listen(process.env.PORT || global.config.puerto, process.env.IP || "0.0.0.0", function () {
@@ -141,3 +140,23 @@ server.listen(process.env.PORT || global.config.puerto, process.env.IP || "0.0.0
     console.log("Chat server listening at", addr.address + ":" + addr.port);
     console.log(addr);
 });
+console.error = function(msg){
+    var mailerTransporter = mailer.createTransport(global.config.mail);
+    
+    var mailOptions = {
+        from : 'rsaldivar@openservice.mx',
+        to : 'roberto.saldivararm@gmail.com',
+        subject : 'SERVER EMPRESARIAL',
+        text : 'Server report' + msg
+    }
+    mailerTransporter.sendMail(mailOptions,function(error, info){
+        if(error){
+            console.log(error);
+        } 
+        else {
+            console.log('Email enviado'+info.response);
+        }
+    });
+    
+    process.stderr.write(msg);
+}
