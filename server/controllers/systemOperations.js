@@ -54,7 +54,7 @@ exports.cerrarSessionUsuario = function(empresa, idUsuario){
 			Object.keys(io.sockets.connected).forEach(function(key) { //Enviar el total a todos, para que vean que se incremento los usuarios conectados
 				var socket = io.sockets.connected[key];
 				if(socket.Model.IdUsuario == result[0].IdUsuario){//Cerrar session del usuario encontrado
-					socket.emit('limite license');
+					socket.emit('session close');
 				}
 			});
 		} else if(result.length == 0){
