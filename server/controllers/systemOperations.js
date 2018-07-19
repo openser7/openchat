@@ -36,7 +36,7 @@ exports.getInfoEmpresa = function(req, res)  {
 
 exports.clearDataBase = function(req,res){//Metodo para limpiar las licencias y usuarios
 	try{
-		userModel.remove({},function(err){
+		userModel.remove({'room': req.query.empresa},function(err){
 			if (err)res.send(500, err);
 			else {
 				res.send(200, 'ClearDatabase');
@@ -58,7 +58,7 @@ exports.cerrarSessionUsuario = function(empresa, idUsuario){
 				}
 			});
 		} else if(result.length == 0){
-			
+
 		}
 	});
 }
