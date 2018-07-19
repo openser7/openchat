@@ -124,7 +124,7 @@ exports.converLocalStorageToUserModel = function(localStorage, userModel){
             IdCliente: localStorage.IdCliente,
             IdPerfil: localStorage.IdPerfil,
             IdTipoRol: localStorage.IdTipoRol,
-            //Imagen: localStorage.Imagen,
+            Imagen: localStorage.Imagen,
             session : crypto.randomBytes(20).toString('hex'),
             tour : false,
             IdUsuario: localStorage.IdUsuario,
@@ -138,7 +138,7 @@ exports.converLocalStorageToUserModel = function(localStorage, userModel){
     userModel.IdPerfil=localStorage.IdPerfil;
     userModel.IdTipoRol=localStorage.IdTipoRol;
     userModel.Status=localStorage.Status; //Actualizar el Status
-    //userModel.Imagen=localStorage.Imagen;
+    userModel.Imagen=localStorage.Imagen;
     userModel.tour =  true ;
     userModel.IdUsuario=localStorage.IdUsuario;
     userModel.TFB=localStorage.TFB;
