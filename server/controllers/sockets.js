@@ -101,11 +101,14 @@ io.sockets.on('connection', function (socket) {
         });
     });
 
-
     socket.on('send alert', function (mensaje) {
         clientAlert(mensaje);
     });
 
+    /**
+     * Metodo para notificar a todos los usuarios conectados
+     * @param {} str 
+     */
     function clientAlert(str) {
         socket.emit('new alert', str);
     }
@@ -247,6 +250,13 @@ io.sockets.on('connection', function (socket) {
             });
         }
     });
+    
+    /**
+     * Evento emitido por un administrador para cerrar la session de un usuario especifico de su empresa
+     */
+    socket.on('session close', function(userData){
+        global.Controllers.systemOperations.cerrarSessionUsuario(userData.room , userData.IdUsuario);
+    });
     /*
      * Evento para log off... se eliminan y desconectan todos los sockets de usuario.
      */
@@ -263,7 +273,7 @@ io.sockets.on('connection', function (socket) {
                         }
                         //Emitir el cambio de estatos a desconectado
                         //io.sockets.emit('update user status', { 'userData': user, 'oldStatus': userData.Status });
-                        //global.Controllers.systemOperations.getTotalInstances(user.room, socket.configEnterprise.Licencias, null);
+                        global.Controllers.systemOperations.getTotalInstances(user.room, socket.configEnterprise.Licencias, null);
                     } else {
                         socket.disconnect();
                     }

@@ -36,7 +36,7 @@ exports.getInfoEmpresa = function(req, res)  {
 
 exports.clearDataBase = function(req,res){//Metodo para limpiar las licencias y usuarios
 	try{
-		userModel.remove({},function(err){
+		userModel.remove({'room': req.query.empresa},function(err){
 			if (err)res.send(500, err);
 			else {
 				res.send(200, 'ClearDatabase');
@@ -53,19 +53,24 @@ exports.cerrarSessionUsuario = function(empresa, idUsuario){
 		else if (result && result.length > 0 ) {
 			Object.keys(io.sockets.connected).forEach(function(key) { //Enviar el total a todos, para que vean que se incremento los usuarios conectados
 				var socket = io.sockets.connected[key];
-				if(socket.model.IdUsuario == result.IdUsuario){
-					socket.emit('limite license');
+				if(socket.Model.IdUsuario == result[0].IdUsuario){//Cerrar session del usuario encontrado
+					socket.emit('session close');
 				}
 			});
 		} else if(result.length == 0){
-			res.status(200).jsonp('empty');
+
 		}
 	});
 }
-
+/**
+ * Servicio web /session/close
+ * @param {} req 
+ * @param {*} res 
+ */
 exports.cerrarSession = function(req,res){
-	if (req.query && req.query.empresa && re.query.usuario ) {
-		cerrarSessionUsuario(req.query.empresa, re.query.usuario.IdUsuario);
+	if (req.query && req.query.empresa && req.query.usuario ) {
+		this.Controllers.systemOperations.cerrarSessionUsuario(req.query.empresa, req.query.usuario);
+		res.status(200).jsonp('session close send ');
 	} else {
 		res.send(500, 'Request Error');
 	}
