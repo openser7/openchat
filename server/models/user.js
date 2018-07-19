@@ -18,9 +18,9 @@ exports = module.exports = function (app, mongoose) {
         IdUsuario: {
             type: String
         },
-        // Imagen: {
-        //     type: String
-        // },
+        Imagen: {
+             type: String
+        },
         Nombre: {
             type: String
         },

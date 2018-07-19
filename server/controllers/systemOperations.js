@@ -25,15 +25,108 @@ exports.getInfoEmpresa = function(req, res)  {
 			if (resultado.recordset.length > 0) {
 				var cliente = resultado.recordset[0];
 				res.status(200).jsonp(cliente);
+			} else if(result.length == 0){
+				res.status(200).jsonp('empty');
 			}
 		});
 	} else {
 		res.send(500, 'Request Error');
 	}
 }
+
 exports.clearDataBase = function(req,res){//Metodo para limpiar las licencias y usuarios
-	
+	try{
+		userModel.remove({},function(err){
+			if (err)res.send(500, err);
+			else {
+				res.send(200, 'ClearDatabase');
+			}
+		});
+	}catch(error){
+		res.send(500, error.toString());
+	}
 }
+
+exports.cerrarSessionUsuario = function(empresa, idUsuario){
+	userModel.find({ 'room': empresa, 'IdUsuario' : idUsuario }, function(err, result) {
+		if (err)res.send(500, err);
+		else if (result && result.length > 0 ) {
+			Object.keys(io.sockets.connected).forEach(function(key) { //Enviar el total a todos, para que vean que se incremento los usuarios conectados
+				var socket = io.sockets.connected[key];
+				if(socket.model.IdUsuario == result.IdUsuario){
+					socket.emit('limite license');
+				}
+			});
+		} else if(result.length == 0){
+			res.status(200).jsonp('empty');
+		}
+	});
+}
+
+exports.cerrarSession = function(req,res){
+	if (req.query && req.query.empresa && re.query.usuario ) {
+		cerrarSessionUsuario(req.query.empresa, re.query.usuario.IdUsuario);
+	} else {
+		res.send(500, 'Request Error');
+	}
+}
+/**
+ * Servicio para regresar los agentes 
+ * @param {*} req 
+ * @param {*} res 
+ */
+exports.getAgentes = function(req,res){
+	if (req.query && req.query.empresa) {
+		userModel.find({ 'room': req.query.empresa }, function(err, result) {
+			if (err)res.send(500, err);
+			else if (result && result.length > 0 ) {
+				var agentes = [];
+				result.forEach(function(usuario){
+					if(usuario.sockets.length > 0){
+						if(usuario.IdTipoRol != "2")
+							agentes.push( usuario );
+					}
+				});
+				res.status(200).jsonp(agentes);
+			} else if(result.length == 0){
+				res.status(200).jsonp('empty');
+			}
+		});
+	} else {
+		res.send(500, 'Request Error');
+	}
+}
+/**
+ * Servicio para regresar los clientes
+ * @param {*} req 
+ * @param {*} res 
+ */
+exports.getClientes = function(req,res){
+	if (req.query && req.query.empresa) {
+		userModel.find({ 'room': req.query.empresa }, function(err, result) {
+			if (err)res.send(500, err);
+			else if (result && result.length > 0 ) {
+				var clientes = [];
+				result.forEach(function(usuario){
+					if(usuario.sockets.length > 0){
+						if(usuario.IdTipoRol == "2")
+							clientes.push( usuario );
+					}
+				});
+				res.status(200).jsonp(clientes);
+			} else if(result.length == 0){
+				res.status(200).jsonp('empty');
+			}
+		});
+	} else {
+		res.send(500, 'Request Error');
+	}
+}
+/**
+ * Servicio para regresar los agentes y los clientes conectados
+ * @param {*} req 
+ * @param {*} res 
+ */
 exports.getLicenciasEmpresa = function(req,res){
 	if (req.query && req.query.empresa) {
 		userModel.find({ 'room': req.query.empresa }, function(err, result) {
@@ -43,24 +136,17 @@ exports.getLicenciasEmpresa = function(req,res){
 				result.forEach(function(usuario){
 					if(usuario.sockets.length > 0){
 						if(usuario.IdTipoRol != "2")
-							agentes.push({
-								user : usuario.IdUsuario,
-								name : usuario.NombreCompleto,
-								//conexiones : usuario.sockets.toString(),
-								date : usuario.updatedAt,
-								idRol : usuario.IdTipoRol,
-							});
+							agentes.push( usuario.NombreCompleto);
 						else 
-							clientes.push({
-								nombreCompleto : usuario.NombreCompleto,
-								idUsuario : usuario.IdUsuario
-							})
+							clientes.push( usuario.NombreCompleto);
 					}
 				});
 				res.status(200).jsonp({
 					'agents': agentes,
 					'customers': clientes
 				});
+			}else if(result.length == 0){
+				res.status(200).jsonp('empty');
 			}
 		});
 	} else {
@@ -83,7 +169,6 @@ exports.getSystemConfiguration = function(socket, callback) {
 				return callback(cliente, false)
 			}
 		});
-
 	}
 }
 
