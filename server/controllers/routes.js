@@ -7,7 +7,7 @@ router.route('/System/Licenses').get(systemOperations.licensesAvailable);
 router.route('/Notificacion/Enviar').post(notificationController.sendNotification);
 //-- Limpiar los usuarios 
 router.route('/clear').get(systemOperations.clearDataBase);
-router.route('/cerrarsession').get(systemOperations.clearDataBase);
+router.route('/session/close').get(systemOperations.cerrarSession);
 //-- 
 router.route('/licencias').get(systemOperations.getLicenciasEmpresa);
 router.route('/licencias/agentes').get(systemOperations.getAgentes);
