@@ -58,7 +58,7 @@ exports.cerrarSessionUsuario = function(empresa, idUsuario){
 				}
 			});
 		} else if(result.length == 0){
-			res.status(200).jsonp('empty');
+			
 		}
 	});
 }
