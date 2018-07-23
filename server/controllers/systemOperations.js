@@ -25,7 +25,7 @@ exports.getInfoEmpresa = function(req, res)  {
 			if (resultado.recordset.length > 0) {
 				var cliente = resultado.recordset[0];
 				res.status(200).jsonp(cliente);
-			} else if(result.length == 0){
+			} else if(resultado.length == 0){
 				res.status(200).jsonp('empty');
 			}
 		});
@@ -36,7 +36,7 @@ exports.getInfoEmpresa = function(req, res)  {
 
 exports.clearDataBase = function(req,res){//Metodo para limpiar las licencias y usuarios
 	try{
-		userModel.remove({'room': req.query.empresa},function(err){
+		userModel.remove({'room': req.query.empresa },function(err){
 			if (err)res.send(500, err);
 			else {
 				res.send(200, 'ClearDatabase');
