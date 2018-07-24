@@ -6,7 +6,7 @@ var request = require('request');
  */
 exports.getInfoEmpresa = function (req, res) {
 	if (req.query && req.query.empresa) {
-		console.log("Get Info - " + req.query.empresa);
+		if(global.config.debug)console.log("Get Info - " + req.query.empresa);
 		var query = ' select Cliente.*, IdGoogle as GoogleId, Google.Secreto as GoogleSecret,' +
 			' FolderWeb ' +
 			' SAML, Google, LogOut, LogOutSAML, ' +
@@ -59,11 +59,11 @@ exports.cerrarSessionUsuario = function (empresa, idUsuario) {
 					}
 				});
 			} else if (result.length == 0) {
-				console.log('Usuario para cerrar session no encontrado systemoperations.62')
+				if(global.config.debug)console.log('Usuario para cerrar session no encontrado systemoperations.62');
 			}
 		}
 		catch (x) {
-
+			if(global.config.debug)console.log('Usuario para cerrar session no encontrado systemoperations'+x.toString());
 		}
 	});
 }
@@ -179,7 +179,7 @@ exports.getSystemConfiguration = function (socket, callback) {
 			if (err) return callback(null, err);
 			if (resultado.recordset.length > 0) {
 				var cliente = resultado.recordset[0];
-				console.log(cliente);
+				if(global.config.debug)console.log(cliente);
 				return callback(cliente, false)
 			}
 		});
