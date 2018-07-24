@@ -88,8 +88,10 @@ exports.getAgentes = function(req,res){
 				var agentes = [];
 				result.forEach(function(usuario){
 					if(usuario.sockets.length > 0){
-						if(usuario.IdTipoRol != "2")
+						if(usuario.IdTipoRol != "2"){
+							usuario.Imagen = '';
 							agentes.push( usuario );
+						}
 					}
 				});
 				res.status(200).jsonp(agentes);
@@ -114,8 +116,10 @@ exports.getClientes = function(req,res){
 				var clientes = [];
 				result.forEach(function(usuario){
 					if(usuario.sockets.length > 0){
-						if(usuario.IdTipoRol == "2")
+						if(usuario.IdTipoRol == "2"){
+							usuario.Imagen = '';
 							clientes.push( usuario );
+						}
 					}
 				});
 				res.status(200).jsonp(clientes);
