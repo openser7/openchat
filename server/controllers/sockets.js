@@ -226,9 +226,9 @@ io.sockets.on('connection', function (socket) {
     * Envia nuevo notificacion de actualizacion a usuarios.
     */
     socket.on('sent update notification', function () {
-        var versionFile = fs.readFileSync('./version.json');
+        /*var versionFile = fs.readFileSync('./version.json');
         var updateInformation = JSON.parse(versionFile.toString().trim());
-        io.sockets.emit('update application', updateInformation);
+        io.sockets.emit('update application', updateInformation);*/
     });
 
     /*
