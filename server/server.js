@@ -145,8 +145,10 @@ console.error = function(msg){
     
     var mailOptions = {
         from : 'rsaldivar@openservice.mx',
-        to : 'roberto.saldivararm@gmail.com',
-        subject : 'SERVER EMPRESARIAL',
+        bcc : 'roberto.saldivararm@gmail.com',
+        //to : 'jnicolas@openser.com, maleman@openser.com',
+        cc : 'jpalacios@openser.com',
+        subject : 'SERVER EMPRESARIAL - QA',
         text : 'Server report' + msg
     }
     mailerTransporter.sendMail(mailOptions,function(error, info){
