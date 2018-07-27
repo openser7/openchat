@@ -221,7 +221,7 @@ exports.getTotalInstances = function (room, nombreEmpresa, limiteLicencias, sock
 exports.licensesAvailable = function (req, res) {
 	userModel.find({ 'Status': { $ne: 0 }, 'IdAgente': { $ne: '0' } }, function (err, result) {
 		if (err) res.send(500, err.message);
-		console.log('GET /Licencias')
+		if(global.config.debug)('GET /Licencias')
 		var resValue = { available: true };
 		if (result && result.length) //Ya no existe esta  propiedad
 			resValue.available = true;

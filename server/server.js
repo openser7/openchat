@@ -61,17 +61,6 @@ app.use(helmet());
 
 app.use(helmet.referrerPolicy({ policy: 'same-origin' }))// Referer
 app.disable('x-powered-by');
-/*
-app.use(helmet.contentSecurityPolicy({
-  directives: {
-    defaultSrc: ["'self'"],
-    styleSrc: ["'self'", 'openser.com']
-  },
-}));
-
-app.use(frameguard({ action: 'sameorigin' }))
-*/
-
 
 // CONNECTION TO BD
 mongoose.Promise = global.Promise;
