@@ -49,7 +49,7 @@ io.sockets.on('connection', function (socket) {
             } else {
                 if (responseJson.Nombre === socket.handshake.query.enterprise) {//el nombre de la empresa de la base de datos coincide con el query enviado en el evento conect.
                     socket.join(responseJson.Nombre);  //Agregarlo al ROOM segun el nombre de empresa
-                    socket.configEnterprise = responseJson;
+                    socket.configEnterprise = responseJson;//Cargar la informacion de empresarial
                     global.Controllers.user.connectUser(localStorage, socket, function (err, userModel) { // Si el userModel es Null quiere decir que no hay licencias
                         if (err) {
                             console.log(err);
