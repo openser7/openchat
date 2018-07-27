@@ -65,7 +65,7 @@ exports.connectUser = function (localStorage, socket, callback) {
         if (err) {
             callback(err, null);
         } else {         
-            if( userModel == null){
+            if( userModel == null){ //Si no existe en la BD Mongo
                 if (global.config.debug) console.log('Agregar el user a Mongo ' + localStorage.CveUsuario);
                 userModel = ctrl.converLocalStorageToUserModel(localStorage, userModel);   
                 historyController.add(userModel, socketActual, localStorage.TFB, 'inicio de session');              
@@ -74,7 +74,7 @@ exports.connectUser = function (localStorage, socket, callback) {
                 userModel = ctrl.converLocalStorageToUserModel(localStorage, userModel);
                 if (userModel.session == localStorage.session) { // Misma Session, Nueva Pestaña             
                     historyController.add(userModel, socketActual, (localStorage.Mobile == "true"), 'conexión en la misma session');
-                }  else {                    
+                }  else {  //Diferente navegador o Computadora       
                     userModel.session = crypto.randomBytes(20).toString('hex');//Nueva Session
                     for (var i = 0; i < userModel.sockets.length; i++) { //Eliminar los sockets anteriores...
                         if (inRoom(userModel.sockets[i], userModel.Enterprise))
@@ -149,7 +149,7 @@ exports.converLocalStorageToUserModel = function(localStorage, userModel){
  * Get users list  for enterprise (room)
  */
 exports.getUsersChatList = function (userModel, callback) {
-    UserModel.find({ IdAgente: { $ne: '0' }, Status: { "$in": [0, 1, 2, 3, 4] },  'room': userModel.room  }, function (err, users) {
+    UserModel.find({ IdAgente: { $ne: '0' }, 'room': userModel.room  }, function (err, users) {
         callback(err, users);
     })
 };
