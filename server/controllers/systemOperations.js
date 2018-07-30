@@ -52,12 +52,22 @@ exports.cerrarSessionUsuario = function (empresa, idUsuario) {
 		try {
 			if (err) res.send(500, err);
 			else if (result && result.length > 0) {
-				Object.keys(io.sockets.connected).forEach(function (key) { //Enviar el total a todos, para que vean que se incremento los usuarios conectados
-					var socket = io.sockets.connected[key];
-					if (socket.Model.IdUsuario == result[0].IdUsuario && socket.Model.room == result[0].room) {//Cerrar session del usuario encontrado
+				/*var arregloConexion = Object.keys(io.sockets.sockets);
+				for(i = 0; i < arregloConexion.length  ; i++){
+					var socket = io.sockets.sockets[arregloConexion[i]];
+					if(socket.Model.room == result[0].room){//Pertenecen a la empresa
+						if (socket.Model.IdUsuario == result[0].IdUsuario ) {//Cerrar session del usuario encontrado
 						socket.emit('session close');
+						}
 					}
-				});
+				}*/
+				var idSockets = result[0].sockets;
+				for ( i= 0; i < idSockets.length; i++){
+					var socket = io.sockets.sockets[idSockets[i]];
+					if( socket != null){
+						socket.emit('session close',{});
+					}
+				}
 			} else if (result.length == 0) {
 				if(global.config.debug)console.log('Usuario para cerrar session no encontrado systemoperations.62');
 			}
