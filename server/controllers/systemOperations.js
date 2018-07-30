@@ -62,7 +62,7 @@ exports.cerrarSessionUsuario = function (empresa, idUsuario) {
 					}
 				}*/
 				var idSockets = result[0].sockets;
-				for ( i= 0; i < idSockets.length; i++){
+				for ( i= 0; i < idSockets.length; i++){//Si el total de sockets no existen, hay que setear el status en 0, y eliminar sus sockets
 					var socket = io.sockets.sockets[idSockets[i]];
 					if( socket != null){
 						socket.emit('session close',{});
