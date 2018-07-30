@@ -48,6 +48,7 @@ io.sockets.on('connection', function (socket) {
                 socket.disconnect(0); //Desconectar si no exite el serial
             } else {
                 if (responseJson.Nombre === socket.handshake.query.enterprise) {//el nombre de la empresa de la base de datos coincide con el query enviado en el evento conect.
+                    //SUPER IMPORTANTE
                     socket.join(responseJson.Nombre);  //Agregarlo al ROOM segun el nombre de empresa
                     socket.configEnterprise = responseJson;//Cargar la informacion de empresarial
                     global.Controllers.user.connectUser(localStorage, socket, function (err, userModel) { // Si el userModel es Null quiere decir que no hay licencias
@@ -55,7 +56,7 @@ io.sockets.on('connection', function (socket) {
                             console.log(err);
                         } else {
                             //INFORMAR QUE EL USARIO ESTA ONLINE
-                            io.sockets.emit('user online', userModel);
+                            io.to(userModel.room).emit('user online', userModel);
                             // ACTUALIZAR INFORMACION DEL USUARIO 
                             socket.emit('session', {
                                 session: userModel.session,
@@ -95,10 +96,10 @@ io.sockets.on('connection', function (socket) {
         socket.emit('cambiar-room', data) //la señal del cambio de canal al cliente
     });
     socket.on('send message room', function (mensaje) {
-        io.sockets.in('public').emit('new message group', {
-            msg: mensaje,
-            CveUsuario: socket.CveUsuario
-        });
+        //io.sockets.in('public').emit('new message group', {
+        //    msg: mensaje,
+        //    CveUsuario: socket.CveUsuario
+        //});
     });
 
     socket.on('send alert', function (mensaje) {
@@ -217,8 +218,8 @@ io.sockets.on('connection', function (socket) {
         if (global.debug) console.log('Cambio de status para el usuario :' + localStorage.CveUsuario);
         global.Controllers.user.changeStatus(localStorage, socket, function (err, userUpdated) {
             if (err) console.log(err);
-            else {
-                io.sockets.emit('update user status', { userData: userUpdated, oldStatus: oldStatus });
+            else {//Emitir el evento al room especifico
+                io.to(userUpdated.room).emit('update user status', { userData: userUpdated, oldStatus: oldStatus });
             }
         });
     });
@@ -228,7 +229,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('sent update notification', function () {
         /*var versionFile = fs.readFileSync('./version.json');
         var updateInformation = JSON.parse(versionFile.toString().trim());
-        io.sockets.emit('update application', updateInformation);*/
+        io.to('QA').emit('update application', updateInformation);*/
     });
 
     /*
@@ -243,7 +244,7 @@ io.sockets.on('connection', function (socket) {
                 else {
                     if (user.disconnect) { //Si se cerro el ultimo socket avisar que esta como desconectado
                         if (user.sockets.length <= 0)
-                            io.sockets.emit('update user status', { userData: user._doc, oldStatus: statusAnt }); //Enviar que se decremento el total de licencias usadas
+                            io.to(user.room).emit('update user status', { userData: user._doc, oldStatus: statusAnt }); //Enviar que se decremento el total de licencias usadas
                             global.Controllers.systemOperations.getTotalInstances(user.room, socket.configEnterprise.Nombre, socket.configEnterprise.Licencias, null);
                     }
                 }
@@ -272,7 +273,7 @@ io.sockets.on('connection', function (socket) {
                             socket.to(user.sockets[i]).emit('cierre de session');
                         }
                         //Emitir el cambio de estatos a desconectado
-                        //io.sockets.emit('update user status', { 'userData': user, 'oldStatus': userData.Status });
+                        //io.to('QA').emit('update user status', { 'userData': user, 'oldStatus': userData.Status });
                         global.Controllers.systemOperations.getTotalInstances(user.room, socket.configEnterprise.Licencias, null);
                     } else {
                         socket.disconnect();
