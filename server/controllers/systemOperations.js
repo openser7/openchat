@@ -52,6 +52,7 @@ exports.cerrarSessionUsuario = function (empresa, idUsuario) {
 		try {
 			if (err) res.send(500, err);
 			else if (result && result.length > 0) {
+				var usuario = result[0];
 				/*var arregloConexion = Object.keys(io.sockets.sockets);
 				for(i = 0; i < arregloConexion.length  ; i++){
 					var socket = io.sockets.sockets[arregloConexion[i]];
@@ -61,12 +62,24 @@ exports.cerrarSessionUsuario = function (empresa, idUsuario) {
 						}
 					}
 				}*/
-				var idSockets = result[0].sockets;
+				var idSockets = usuario.sockets;
+				var cantidadConexion = 0;
 				for ( i= 0; i < idSockets.length; i++){
 					var socket = io.sockets.sockets[idSockets[i]];
 					if( socket != null){
 						socket.emit('session close',{});
+					} else {
+						cantidadConexion++;
 					}
+				}
+				if(idSockets.length == cantidadConexion ){//Si no existio ningun cierre de session se actualiza
+					usuario.Status = 0;
+					usuario.sockets = [];
+					usuario.disconnect = true;
+					usuario.save(function (err, userModel) {
+						if (err) console.log(err);
+						historyController.add(userModel, socket.id, false, 'Se eliminao a alguien que no tiene sockets activos(conectados)');
+					});
 				}
 			} else if (result.length == 0) {
 				if(global.config.debug)console.log('Usuario para cerrar session no encontrado systemoperations.62');
