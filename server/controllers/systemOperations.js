@@ -33,7 +33,44 @@ exports.getInfoEmpresa = function (req, res) {
 		res.send(500, 'Request Error');
 	}
 }
-
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
+exports.clearSockets = function (req, res) {//Metodo para limpiar las licencias y usuarios
+	try {
+		userModel.find({}, function (err, users) {
+			if (err) res.send(500, err);
+			else {
+				var modifiedUsers =[];
+				users.forEach(function(user){
+					if(user.sockets.length > 0){
+						for ( i= 0; i < user.sockets.length; i++){
+							if( io.sockets.sockets[user.sockets[i]] != null){
+								io.sockets.sockets[user.sockets[i]].emit('session close');//Se envia cerrar session a todos los sockets conectados
+							}  else {
+								sinConexion = true; //Si se encuentra alguno sin conexion
+							}
+						}
+						if(sinConexion ){//Se marca como desconectado y se vacia el arreglo de conexiones
+							user.Status = 0;
+							user.sockets = [];
+							user.disconnect = true;
+							modifiedUsers.push(user.NombreCompleto+'-'+user.empresa);
+							user.save(function (err, user) {
+								if (err) console.log(err);         
+							});
+						}
+					}
+				});
+				res.send(200, modifiedUsers);
+			}
+		});
+	} catch (error) {
+		res.send(500, error.toString());
+	}
+}
 exports.clearDataBase = function (req, res) {//Metodo para limpiar las licencias y usuarios
 	try {
 		userModel.remove({ 'room': req.query.empresa }, function (err) {
