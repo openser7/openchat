@@ -47,38 +47,32 @@ exports.clearDataBase = function (req, res) {//Metodo para limpiar las licencias
 	}
 }
 
-exports.cerrarSessionUsuario = function (empresa, idUsuario) {
+exports.cerrarSessionUsuario = function (empresa, idUsuario, socketAdministrador) {
+	var adminSocket = socketAdministrador;
 	userModel.find({ 'room': empresa, 'IdUsuario': idUsuario }, function (err, result) {
 		try {
 			if (err) res.send(500, err);
 			else if (result && result.length > 0) {
 				var usuario = result[0];
-				/*var arregloConexion = Object.keys(io.sockets.sockets);
-				for(i = 0; i < arregloConexion.length  ; i++){
-					var socket = io.sockets.sockets[arregloConexion[i]];
-					if(socket.Model.room == result[0].room){//Pertenecen a la empresa
-						if (socket.Model.IdUsuario == result[0].IdUsuario ) {//Cerrar session del usuario encontrado
-						socket.emit('session close');
-						}
-					}
-				}*/
-				var idSockets = usuario.sockets;
-				var cantidadConexion = 0;
-				for ( i= 0; i < idSockets.length; i++){
-					var socket = io.sockets.sockets[idSockets[i]];
-					if( socket != null){
-						socket.emit('session close',{});
-					} else {
-						cantidadConexion++;
+				var sinConexion = false;
+				for ( i= 0; i < usuario.sockets.length; i++){
+					if( io.sockets.sockets[usuario.sockets[i]] != null){
+						io.sockets.sockets[usuario.sockets[i]].emit('session close');//Se envia cerrar session a todos los sockets conectados
+					}  else {
+						sinConexion = true; //Si se encuentra alguno sin conexion
 					}
 				}
-				if(idSockets.length == cantidadConexion ){//Si no existio ningun cierre de session se actualiza
+				if(sinConexion ){//Se marca como desconectado y se vacia el arreglo de conexiones
+					var statusAnterior = usuario.Status;
 					usuario.Status = 0;
 					usuario.sockets = [];
 					usuario.disconnect = true;
-					usuario.save(function (err, userModel) {
-						if (err) console.log(err);
-						historyController.add(userModel, socket.id, false, 'Se eliminao a alguien que no tiene sockets activos(conectados)');
+					usuario.save(function (err, user) {
+						if (err) console.log(err);         
+						io.to(user.room).emit('update user status', { userData: user._doc, oldStatus: statusAnterior }); //Enviar que se decremento el total de licencias usadas
+						//Enviar el enviar el total de intancias si es desde webservice
+						var socket = adminSocket;
+						if(socket != null)global.Controllers.systemOperations.getTotalInstances(user.room, socket.configEnterprise.Nombre, socket.configEnterprise.Licencias, null);
 					});
 				}
 			} else if (result.length == 0) {
@@ -97,7 +91,7 @@ exports.cerrarSessionUsuario = function (empresa, idUsuario) {
  */
 exports.cerrarSession = function (req, res) {
 	if (req.query && req.query.empresa && req.query.usuario) {
-		this.Controllers.systemOperations.cerrarSessionUsuario(req.query.empresa, req.query.usuario);
+		this.Controllers.systemOperations.cerrarSessionUsuario(req.query.empresa, req.query.usuario, null);
 		res.status(200).jsonp('session close send ');
 	} else {
 		res.send(500, 'Request Error');
@@ -216,21 +210,15 @@ exports.getSystemConfiguration = function (socket, callback) {
 exports.getTotalInstances = function (room, nombreEmpresa, limiteLicencias, socketInicioSession) {
 	var roomEntrada = room;
 	userModel.find({ 'Status': { $ne: 0 }, 'IdAgente': { $ne: '0' }, 'room': room }, function (err, result) {
-
 		if (result && result.length > 0) {
 			if (result.length > limiteLicencias) {
 				if (socketInicioSession != null) {
 					socketInicioSession.emit('limite license');
 				}
 			} else {
-				Object.keys(io.sockets.connected).forEach(function (key) { //Enviar el total a todos, para que vean que se incremento los usuarios conectados
-					var socket = io.sockets.connected[key];
-					if (socket.rooms[roomEntrada] != null) {
-						socket.emit('total instance', {
-							total: result.length,
-							limit: limiteLicencias,
-						});
-					}
+				io.to(roomEntrada).emit('total instance', {
+					total: result.length,
+					limit: limiteLicencias,
 				});
 			}
 		}
