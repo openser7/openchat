@@ -43,7 +43,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('connect user', function (localStorage, browserTabInfo, appVersion) {
         global.Controllers.systemOperations.getSystemConfiguration(socket, function (responseJson, error) {
             if (error) {
-                console.log('ERROR NO SE PUEDE OBTENER LAS LICENCIAS DE LAS EMPRESAS');
+                console.log('ERROR NO SE PUEDE OBTENER LAS INOFRMACION DE SQL SERVER PARA LAS EMPRESAS');
                 console.log(error);
                 socket.disconnect(0); //Desconectar si no exite el serial
             } else {
@@ -256,7 +256,8 @@ io.sockets.on('connection', function (socket) {
      * Evento emitido por un administrador para cerrar la session de un usuario especifico de su empresa
      */
     socket.on('session close', function(userData){
-        global.Controllers.systemOperations.cerrarSessionUsuario(userData.room , userData.IdUsuario);
+        var socket = this;
+        global.Controllers.systemOperations.cerrarSessionUsuario(userData.room , userData.IdUsuario, socket);
     });
     /*
      * Evento para log off... se eliminan y desconectan todos los sockets de usuario.
