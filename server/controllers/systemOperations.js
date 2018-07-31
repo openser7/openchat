@@ -78,7 +78,6 @@ exports.cerrarSessionUsuario = function (empresa, idUsuario) {
 					usuario.disconnect = true;
 					usuario.save(function (err, userModel) {
 						if (err) console.log(err);
-						historyController.add(userModel, socket.id, false, 'Se eliminao a alguien que no tiene sockets activos(conectados)');
 					});
 				}
 			} else if (result.length == 0) {

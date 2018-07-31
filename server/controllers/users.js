@@ -179,10 +179,18 @@ exports.deleteSocketForUser = function (socket, callback) {
         else {
             if (user) {
                 var socketIndex = user.sockets.indexOf(socket.id);
-                if (socketIndex != -1) {
-                    user.sockets.splice(socketIndex, 1);
+                if (socketIndex != -1) {//Si encontro el socket
+                    user.sockets.splice(socketIndex, 1);//Eliminar ese socket 
+                    
+                    /**Verificar que socket io aun mantenga algun socket activo */
+                    for (var i=user.sockets.length-1; i>=0; i--) {
+                        if (io.sockets.sockets[user.sockets[i]] == null) {//Si uno de los socket no existe, se elimina
+                            user.sockets.splice(i, 1);
+                        }
+                    }
+
                     var statusAnt = user.Status; //Uso : Identificar el estatus anterior en caso de desconectar el ultimo socket, asi anunciar su desconexión con un cambio de estatus
-                    if (user.sockets.length == 0) {
+                    if (user.sockets.length == 0) {//Si los sockets estan vacios , marcar como desconectado
                         user.Status = 0;
                         user.disconnect = true;
                     }
