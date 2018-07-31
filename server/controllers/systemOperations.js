@@ -46,14 +46,15 @@ exports.clearSockets = function (req, res) {//Metodo para limpiar las licencias 
 				var modifiedUsers =[];
 				users.forEach(function(user){
 					if(user.sockets.length > 0){
+						var sinConexion = 0;
 						for ( i= 0; i < user.sockets.length; i++){
 							if( io.sockets.sockets[user.sockets[i]] != null){
 								io.sockets.sockets[user.sockets[i]].emit('session close');//Se envia cerrar session a todos los sockets conectados
 							}  else {
-								sinConexion = true; //Si se encuentra alguno sin conexion
+								sinConexion ++; //Si se encuentra alguno sin conexion
 							}
 						}
-						if(sinConexion ){//Se marca como desconectado y se vacia el arreglo de conexiones
+						if(sinConexion  == user.sockets.length){//Se marca como desconectado y se vacia el arreglo de conexiones
 							user.Status = 0;
 							user.sockets = [];
 							user.disconnect = true;
