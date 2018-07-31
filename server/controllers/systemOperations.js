@@ -92,15 +92,15 @@ exports.cerrarSessionUsuario = function (empresa, idUsuario, socketAdministrador
 			if (err) res.send(500, err);
 			else if (result && result.length > 0) {
 				var usuario = result[0];
-				var sinConexion = false;
+				var sinConexion = 0;
 				for ( i= 0; i < usuario.sockets.length; i++){
 					if( io.sockets.sockets[usuario.sockets[i]] != null){
 						io.sockets.sockets[usuario.sockets[i]].emit('session close');//Se envia cerrar session a todos los sockets conectados
 					}  else {
-						sinConexion = true; //Si se encuentra alguno sin conexion
+						sinConexion ++; //Si se encuentra alguno sin conexion
 					}
 				}
-				if(sinConexion ){//Se marca como desconectado y se vacia el arreglo de conexiones
+				if(sinConexion == usuario.sockets.length){//Se marca como desconectado y se vacia el arreglo de conexiones
 					var statusAnterior = usuario.Status;
 					usuario.Status = 0;
 					usuario.sockets = [];
