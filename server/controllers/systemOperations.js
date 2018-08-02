@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var userModel = mongoose.model('user');
+var ticketModel = mongoose.model('ticket');
 var request = require('request');
 /*
  * Carga la informacion de una empresa "WebService"
@@ -279,3 +280,12 @@ exports.licensesAvailable = function (req, res) {
 		res.status(200).jsonp(resValue);
 	});
 };
+exports.ticketSave = function(ticket, enterprise){
+	var ticket = new ticketModel(ticket);
+	ticket.save(function(err, ticketNew){
+		if (err) console.log(err);
+		else {
+			console.log('Ticket Registrado');
+		}
+	});
+}
