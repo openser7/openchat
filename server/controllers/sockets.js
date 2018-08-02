@@ -285,5 +285,11 @@ io.sockets.on('connection', function (socket) {
             socket.disconnect();
         }
     });
+    socket.on('ticket',function(incidente, empresa){
+        if (global.config.debug) {
+            console.log("Se registr o un ticket");
+            console.log(empresa);
+        }
+    });
 });
 

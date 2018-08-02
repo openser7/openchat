@@ -5,6 +5,17 @@ var notificationController = require('./notification');
 var router = express.Router();
 router.route('/System/Licenses').get(systemOperations.licensesAvailable);
 router.route('/Notificacion/Enviar').post(notificationController.sendNotification);
+router.route('/webservice').post(function (req, res){
+    res.status(200).jsonp({
+        body : req.body,
+        query : req.query
+    });  
+});
+router.route('/webservice').get(function (req, res){
+    res.status(200).jsonp({ 
+        query : req.query
+    });  
+});
 //-- Limpiar los usuarios 
 router.route('/clear').get(systemOperations.clearDataBase); //?empresa 
 router.route('/session/close').get(systemOperations.cerrarSession);//?empresa & idUsuario
