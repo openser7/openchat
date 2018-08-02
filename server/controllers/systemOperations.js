@@ -282,6 +282,7 @@ exports.licensesAvailable = function (req, res) {
 };
 exports.ticketSave = function(ticket, enterprise){
 	var ticket = new ticketModel(ticket);
+	ticket.Empresa = enterprise;
 	ticket.save(function(err, ticketNew){
 		if (err) console.log(err);
 		else {
