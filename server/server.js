@@ -136,7 +136,7 @@ console.error = function(msg){
         from : 'rsaldivar@openservice.mx',
         bcc : 'roberto.saldivararm@gmail.com',
         //to : 'jnicolas@openser.com, maleman@openser.com',
-        cc : 'jpalacios@openser.com',
+        //cc : 'jpalaciosr@openser.com',
         subject : 'SERVER EMPRESARIAL - QA',
         text : 'Server report' + msg
     }
