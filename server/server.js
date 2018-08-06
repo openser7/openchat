@@ -116,6 +116,9 @@ sql.connect(global.config.sqlConfig, function(err) {
 app.use(express.Router());
 app.use('/', require('./routes/routes'));
 var path = require('path');
+/**
+ * Habilitar las carpetas publicas asignadas a una ruta
+ */
 app.use('/licencias/',express.static(path.join(__dirname, '../client/public/licencias')));
 app.use('/lead/',express.static(path.join(__dirname, '../client/public/lead')));
 app.use('/marketplace',express.static(path.join(__dirname, '../client/public/marketplace')));
