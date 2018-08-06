@@ -42,21 +42,19 @@ catch (err) {
 }
 
 global.io = require('socket.io').listen(server, { 'transports': ['websocket', 'polling'] });
-
 global.mongoose = mongoose;
-
+//HEADERS
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     return next();
 });
-
+//CONFIGURACION SERVICIOS JSON
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(methodOverride());
 //SEGURIDAD
-
 app.use(helmet());
 
 app.use(helmet.referrerPolicy({ policy: 'same-origin' }))// Referer
@@ -100,14 +98,14 @@ usuarios.update({
 },function(err, res) {});
 // Import Controllers 
 global.Controllers = {
-    systemOperations: require('./controllers/systemOperations'),
-    user: require('./controllers/users'),
-    conversation: require('./controllers/conversations')
+    session: require('./controllers/socket/session'),
+    user: require('./controllers/socket/users'),
+    conversation: require('./controllers/socket/conversations')
 }
-var socketIo = require('./controllers/sockets');
+var socketIo = require('./sockets');
 
 // connect to your database
-global.sql = sql;
+global.sql = sql; //sql pool conection 
 sql.connect(global.config.sqlConfig, function(err) {
 	if (err){
 		console.log(err);// create Request object
@@ -116,12 +114,13 @@ sql.connect(global.config.sqlConfig, function(err) {
 		
 // Configuara el ruteo de todos los servicios y entidades de la app ... signar las rutas a los metodos de los controllers
 app.use(express.Router());
-app.use('/', require('./controllers/routes'));
+app.use('/', require('./routes/routes'));
 var path = require('path');
-app.use('/public/',express.static(path.join(__dirname, '../client/public/')));
+app.use('/licencias/',express.static(path.join(__dirname, '../client/public/licencias')));
+app.use('/lead/',express.static(path.join(__dirname, '../client/public/lead')));
 app.use('/marketplace',express.static(path.join(__dirname, '../client/public/marketplace')));
 app.use('/mobile/',express.static(path.join(__dirname, '../client/public/mobile')));
-app.use('/licencias/',express.static(path.join(__dirname, '../client/public/licencias')));
+app.use('/public/',express.static(path.join(__dirname, '../client/public/')));
 
 //Revisar el servidor
 server.listen(process.env.PORT || global.config.puerto, process.env.IP || "0.0.0.0", function () {
@@ -131,15 +130,10 @@ server.listen(process.env.PORT || global.config.puerto, process.env.IP || "0.0.0
 });
 console.error = function(msg){
     var mailerTransporter = mailer.createTransport(global.config.mail);
+    var mailOptions = global.config.mailOptions;
     
-    var mailOptions = {
-        from : 'rsaldivar@openservice.mx',
-        bcc : 'roberto.saldivararm@gmail.com',
-        //to : 'jnicolas@openser.com, maleman@openser.com',
-        //cc : 'jpalaciosr@openser.com',
-        subject : 'SERVER EMPRESARIAL - QA',
-        text : 'Server report' + msg
-    }
+    mailOptions.subject =  "SERVER EMPRESARIAL - QA";
+    mailOptions.text = "Server report" + msg;
     mailerTransporter.sendMail(mailOptions,function(error, info){
         if(error){
             console.log(error);
