@@ -141,6 +141,9 @@
                     if (console && console.log) {
                         console.log("Service guardado con exito", data);
                     }
+                }).fail(function(err){
+                    console.log(err.responseText);
+                    alert('Ocurrio un error:' + err.responseText);
                 });
             }
         });
