@@ -77,72 +77,64 @@
                         <a href="https://www.openser.com/aviso-de-privacidad/" target="_blank">términos y condiciones</a> de uso.
                     </label>
                     <div class="invalid-feedback">
-                      Es necesario aceptar los terminos y condiciones. 
+                        Es necesario aceptar los terminos y condiciones.
                     </div>
                 </div>
             </div>
-            <button id="send" type="submit" class="btn btn-primary">Enviar Solicitud</button>
+            <input type="button" id="send" class="btn btn-primary" value="Enviar Solicitud">
         </form>
     </div>
 
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script>
     <script>
-        function sendService() {
+        var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
 
-            $.ajax({
-                method: "POST",
-                url: "http://35.171.76.34:81/lead/",
-                data: {
-                    "nombre": $('#inputNombre').val(),
-                    "descripcion": $('#textAreaMensaje').val(),
-                    "email": $('#inputEmail').val(),
-                    "telefono": $('#inputTelefono').val(),
-                    "numempleado": $('#selectNumEmpleados').val(),
-                    "origen": $('#selectOrigen').val(),
-                    "campania": $.url('?campania')//Parametro
-                },
-                beforeSend: function (xhr) {
-                    xhr.overrideMimeType("text/plain; charset=x-user-defined");
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : sParameterName[1];
                 }
-            }).done(function (data) {
-                if (console && console.log) {
-                    console.log("Sample of data:", data);
-                }
-            });
-        }
+            }
+        };
 
         $('#send').click(function () {
+            $('form')[0].classList.add('was-validated');
             if ($('#checkTermCond')[0].checked) {
-                sendService();
+                $.ajax({
+                    method: "POST",
+                    url: "http://35.171.76.34:81/lead/save",
+                    data: {
+                        "nombre": $('#inputNombre').val(),
+                        "descripcion": $('#textAreaMensaje').val(),
+                        "email": $('#inputEmail').val(),
+                        "telefono": $('#inputTelefono').val(),
+                        "numempleado": $('#selectNumEmpleados').val(),
+                        "origen": $('#selectOrigen').val(),
+                        "campania": getUrlParameter('campania')//Parametro
+                    },
+                    beforeSend: function (xhr) {
+                        xhr.overrideMimeType("text/plain; charset=x-user-defined");
+                    },
+                }).done(function (data) {
+                    if (console && console.log) {
+                        console.log("Sample of data:", data);
+                    }
+                });
             }
         });
 
-        // Example starter JavaScript for disabling form submissions if there are invalid fields
-        (function () {
-            'use strict';
-            window.addEventListener('load', function () {
-                // Fetch all the forms we want to apply custom Bootstrap validation styles to
-                var forms = document.getElementsByClassName('needs-validation');
-                // Loop over them and prevent submission
-                var validation = Array.prototype.filter.call(forms, function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (form.checkValidity() === false) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        } 
-                        form.classList.add('was-validated');
-                    }, false);
-                });
-            }, false);
-        })();
 
     </script>
 </body>
