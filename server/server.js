@@ -1,4 +1,4 @@
-/* Librerias requeridas */
+// Librerias requeridas 
 var express = require('express'),
     crypto = require('crypto'),
     app = express(),
@@ -13,14 +13,10 @@ var express = require('express'),
     frameguard = require('frameguard'),
     mailer = require('nodemailer');
 
-/**
- * Cargar Configuraciones
- */
+//Load config
 global.config = require("./../config/config.json");
 
-/**
- * Levantar el Servidor
- */
+//Create Server
 var server = null;
 try {
     if (global.config.SSL) {
@@ -43,48 +39,37 @@ catch (err) {
 
 global.io = require('socket.io').listen(server, { 'transports': ['websocket', 'polling'] });
 global.mongoose = mongoose;
-//HEADERS
+
+// Header request
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     return next();
 });
-//CONFIGURACION SERVICIOS JSON
+
+// Config Json
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(methodOverride());
-//SEGURIDAD
-app.use(helmet());
 
+// Security
+app.use(helmet());
 app.use(helmet.referrerPolicy({ policy: 'same-origin' }))// Referer
 app.disable('x-powered-by');
 
-// CONNECTION TO BD
+// Conecttion DB
 mongoose.Promise = global.Promise;
+global.config.promiseLibrary = global.Promise;
 mongoose.set('debug', global.config.debug);
 
-// Connect database uri and options
-const uri = 'mongodb://localhost:27017/openser';
-const options = {
-    user: '',
-    password: '',
-    useNewUrlParser: true,
-    promiseLibrary: global.Promise,
-    poolSize: 100,
-    reconnectTries: 5,
-    reconnectInterval: 1000
-};
+// Connect to mongodb
+mongoose.connect(global.config.dbUrl, global.config.dbConfig);
 
-// Crear conexion db mongo
-mongoose.connect(uri, options);
-
-// Import DB Models 
+// Load models "Mongoose"
 var models = require('./models')(app, mongoose);
 
-/**
- * Limpiar los socket y otrod datos de las conexiones
-*/
+// Clear Sockets[] the users
 var usuarios = mongoose.model('user');
 usuarios.update({
     Status: 0,
@@ -92,15 +77,16 @@ usuarios.update({
     status: 0,
     sockets: []
 }, function (err, res) { });
+
 // Import Controllers 
 global.Controllers = {
+    conversation: require('./controllers/socket/conversations'),
     session: require('./controllers/socket/session'),
-    user: require('./controllers/socket/users'),
-    conversation: require('./controllers/socket/conversations')
+    user: require('./controllers/socket/users')
 }
 var socketIo = require('./sockets');
 
-// connect to your database
+// Connect to your database
 global.sql = sql; //sql pool conection 
 sql.connect(global.config.sqlConfig, function (err) {
     if (err) {
@@ -108,25 +94,26 @@ sql.connect(global.config.sqlConfig, function (err) {
     }
 });
 
-// Configuara el ruteo de todos los servicios y entidades de la app ... signar las rutas a los metodos de los controllers
+// Load Routes 
 app.use(express.Router());
 app.use('/', require('./routes/routes'));
 var path = require('path');
-/**
- * Habilitar las carpetas publicas asignadas a una ruta
- */
+
+// HTML, CSS & JS 
 app.use('/licencias/', express.static(path.join(__dirname, '../client/public/licencias')));
 app.use('/lead/', express.static(path.join(__dirname, '../client/public/lead')));
 app.use('/marketplace', express.static(path.join(__dirname, '../client/public/marketplace')));
 app.use('/mobile/', express.static(path.join(__dirname, '../client/public/mobile')));
 app.use('/public/', express.static(path.join(__dirname, '../client/public/')));
 
-//Revisar el servidor
+// Listen server 
 server.listen(process.env.PORT || global.config.puerto, process.env.IP || "0.0.0.0", function () {
     var addr = server.address();
     console.log("Chat server listening at", addr.address + ":" + addr.port);
     console.log(addr);
 });
+
+// Send EMAIL for Errors 
 console.error = function (msg) {
     var mailerTransporter = mailer.createTransport(global.config.mail);
     var mailOptions = global.config.mailOptions;
