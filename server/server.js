@@ -120,14 +120,9 @@ console.error = function (msg) {
 
     mailOptions.subject = "SERVER EMPRESARIAL - QA";
     mailOptions.text = "Server report" + msg;
-<<<<<<< HEAD
     if(msg.indexOf('tls.createSecurePair()') > 0) return true;//Eliminar el error de MSSQL
     mailerTransporter.sendMail(mailOptions,function(error, info){
         if(error){
-=======
-    mailerTransporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
->>>>>>> 9b7141ebf90037900ae03dedb15ae74aa0b2531a
             console.log(error);
         }
         else {
