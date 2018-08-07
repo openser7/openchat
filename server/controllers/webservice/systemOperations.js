@@ -37,7 +37,7 @@ exports.getInfoEmpresa = function (req, res) {
 
 exports.saveLead = function(req, res ){
 	if(req.body.nombre && req.body.email && req.body.telefono && req.body.campania && req.body.origen){
-		var query = "insert into Leads (Nombre, Descripcion, Email, Telefono, NumEmpleado, Origen, Campania) VALUES ('"+req.body.nombre+"','"+req.body.descripcion+"','"+req.body.email+"','"+req.body.telefono+"',"+req.body.numempleado+",'"+req.body.origen+"','"+req.body.campania+"')";
+		var query = "insert into Leads (Nombre, Descripcion, Email, Telefono, NumEmpleado, Origen, Campania) VALUES ('"+req.body.nombre+"','"+req.body.descripcion+"','"+req.body.email+"','"+req.body.telefono+"','"+req.body.numempleado+"','"+req.body.origen+"','"+req.body.campania+"')";
 		var request = new global.sql.Request();
 		request.query(query,  (err, resultado) => {
 			if (err) {
