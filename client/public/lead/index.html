@@ -81,7 +81,7 @@
                     </div>
                 </div>
             </div>
-            <input type="button" id="send" class="btn btn-primary" value="Enviar Solicitud">
+            <input type="button" id="send" class="btn btn-primary" value="Enviar">
         </form>
     </div>
 
@@ -128,8 +128,17 @@
                         xhr.overrideMimeType("text/plain; charset=x-user-defined");
                     },
                 }).done(function (data) {
+                    if(data == "true"){
+                        $('textarea').val('');
+                        $('form')[0].classList.remove('was-validated');
+                        $('input').val('');
+                        $('#send').val('Enviar');
+                        alert('Enviada con exito!');
+                    }else{
+                        alert('Error al guarda solicitud');
+                    }
                     if (console && console.log) {
-                        console.log("Sample of data:", data);
+                        console.log("Service guardado con exito", data);
                     }
                 });
             }
