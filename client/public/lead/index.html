@@ -128,13 +128,14 @@
                         xhr.overrideMimeType("text/plain; charset=x-user-defined");
                     },
                 }).done(function (data) {
-                    if(data == "true"){
+                    if (data == "true") {
                         $('textarea').val('');
                         $('form')[0].classList.remove('was-validated');
                         $('input').val('');
                         $('#send').val('Enviar');
-                        alert('Enviada con exito!');
-                    }else{
+                        // similar behavior as an HTTP redirect
+                        window.location.replace("https://www.openser.com/gracias/#wpcf7-f700-p1814-o1");
+                    } else {
                         alert('Error al guarda solicitud');
                     }
                     if (console && console.log) {
