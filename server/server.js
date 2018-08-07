@@ -129,6 +129,5 @@ console.error = function (msg) {
             console.log('Email enviado' + info.response);
         }
     });
-    console.log(msg);
     process.stderr.write(msg);
 }
