@@ -2,6 +2,7 @@ io.sockets.on('connection', function (socket) {
     /*
      * funcion y evento del socket que compara versión de usuario y actual, 
      */
+    /*
     function validateVersion(currentVersion) {
         var versionFile = fs.readFileSync('./version.json');
         var fileInformation = JSON.parse(versionFile.toString().trim());
@@ -15,14 +16,15 @@ io.sockets.on('connection', function (socket) {
         }
         return actionObj;
     }
-
+    */
     /*
      * Evento que te elimina de usuarios conectados, 
      */
+    /*
     socket.on('check for updates', function (currentVersion) {
         var versionValidation = validateVersion(currentVersion);
         socket.emit('update application', validateVersion(currentVersion));
-    });
+    });*/
 
     /**
      * TODO FALTA RECIBIR EL ID..
