@@ -23,7 +23,7 @@ global.config = require("./../config/config.json");
  */
 var server = null;
 try {
-    if(global.config.SSL){
+    if (global.config.SSL) {
         var sslOptions = {
             key: fs.readFileSync('./../config/https/key.pem'),
             cert: fs.readFileSync('./../config/https/cert.pem')
@@ -65,23 +65,19 @@ mongoose.Promise = global.Promise;
 mongoose.set('debug', global.config.debug);
 
 // Connect database uri and options
-const uri = 'mongodb://localhost/openser';
+const uri = 'mongodb://localhost:27017/openser';
 const options = {
     user: '',
-    pass: '',
-    server: {
-        reconnectTries: 5,
-        reconnectInterval: 1000,
-        socketOptions: {
-            keepAlive: 10,
-            connectTimeoutMS: 1000
-        },
-    },
+    password: '',
+    useNewUrlParser: true,
+    promiseLibrary: global.Promise,
+    poolSize: 100,
+    reconnectTries: 5,
+    reconnectInterval: 1000
 };
 
 // Crear conexion db mongo
-//mongoose.createConnection(uri, options)
-mongoose.connect(uri);
+mongoose.connect(uri, options);
 
 // Import DB Models 
 var models = require('./models')(app, mongoose);
@@ -91,11 +87,11 @@ var models = require('./models')(app, mongoose);
 */
 var usuarios = mongoose.model('user');
 usuarios.update({
-    Status : 0,
-    disconnect : true,
-    status : 0,
-    sockets : []
-},function(err, res) {});
+    Status: 0,
+    disconnect: true,
+    status: 0,
+    sockets: []
+}, function (err, res) { });
 // Import Controllers 
 global.Controllers = {
     session: require('./controllers/socket/session'),
@@ -106,12 +102,12 @@ var socketIo = require('./sockets');
 
 // connect to your database
 global.sql = sql; //sql pool conection 
-sql.connect(global.config.sqlConfig, function(err) {
-	if (err){
-		console.log(err);// create Request object
-	}
+sql.connect(global.config.sqlConfig, function (err) {
+    if (err) {
+        console.log(err);// create Request object
+    }
 });
-		
+
 // Configuara el ruteo de todos los servicios y entidades de la app ... signar las rutas a los metodos de los controllers
 app.use(express.Router());
 app.use('/', require('./routes/routes'));
@@ -119,11 +115,11 @@ var path = require('path');
 /**
  * Habilitar las carpetas publicas asignadas a una ruta
  */
-app.use('/licencias/',express.static(path.join(__dirname, '../client/public/licencias')));
-app.use('/lead/',express.static(path.join(__dirname, '../client/public/lead')));
-app.use('/marketplace',express.static(path.join(__dirname, '../client/public/marketplace')));
-app.use('/mobile/',express.static(path.join(__dirname, '../client/public/mobile')));
-app.use('/public/',express.static(path.join(__dirname, '../client/public/')));
+app.use('/licencias/', express.static(path.join(__dirname, '../client/public/licencias')));
+app.use('/lead/', express.static(path.join(__dirname, '../client/public/lead')));
+app.use('/marketplace', express.static(path.join(__dirname, '../client/public/marketplace')));
+app.use('/mobile/', express.static(path.join(__dirname, '../client/public/mobile')));
+app.use('/public/', express.static(path.join(__dirname, '../client/public/')));
 
 //Revisar el servidor
 server.listen(process.env.PORT || global.config.puerto, process.env.IP || "0.0.0.0", function () {
@@ -131,20 +127,19 @@ server.listen(process.env.PORT || global.config.puerto, process.env.IP || "0.0.0
     console.log("Chat server listening at", addr.address + ":" + addr.port);
     console.log(addr);
 });
-console.error = function(msg){
+console.error = function (msg) {
     var mailerTransporter = mailer.createTransport(global.config.mail);
     var mailOptions = global.config.mailOptions;
-    
-    mailOptions.subject =  "SERVER EMPRESARIAL - QA";
+
+    mailOptions.subject = "SERVER EMPRESARIAL - QA";
     mailOptions.text = "Server report" + msg;
-    mailerTransporter.sendMail(mailOptions,function(error, info){
-        if(error){
+    mailerTransporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
             console.log(error);
-        } 
+        }
         else {
-            console.log('Email enviado'+info.response);
+            console.log('Email enviado' + info.response);
         }
     });
-    
     process.stderr.write(msg);
 }
