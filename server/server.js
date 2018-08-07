@@ -118,7 +118,7 @@ console.error = function (msg) {
     var mailerTransporter = mailer.createTransport(global.config.mail);
     var mailOptions = global.config.mailOptions;
 
-    mailOptions.subject = "SERVER EMPRESARIAL - QA";
+    mailOptions.subject = global.config.subjectError;
     mailOptions.text = "Server report" + msg;
     if(msg.indexOf('tls.createSecurePair()') > 0) return true;//Eliminar el error de MSSQL
     mailerTransporter.sendMail(mailOptions,function(error, info){
