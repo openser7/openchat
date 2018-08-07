@@ -37,7 +37,7 @@ exports.getInfoEmpresa = function (req, res) {
 
 exports.saveLead = function(req, res ){
 	if(req.body.campania == null){
-		res.send(500,'Se requiere la campaña');
+		res.send(500,'Se requiere la campañia');
 	}
 	if(req.body.nombre && req.body.email && req.body.telefono && req.body.campania && req.body.origen){
 		var query = "insert into Leads (Nombre, Descripcion, Email, Telefono, NumEmpleado, Origen, Campania) VALUES ('"+req.body.nombre+"','"+req.body.descripcion+"','"+req.body.email+"','"+req.body.telefono+"','"+req.body.numempleado+"','"+req.body.origen+"','"+req.body.campania+"')";
