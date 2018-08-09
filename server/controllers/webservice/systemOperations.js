@@ -50,7 +50,18 @@ exports.saveLead = function (req, res) {
 		var mailOptions = global.config.mailOptions;
 
 		mailOptions.subject = "Lead Mail " + req.body.landing;
-		mailOptions.text = "HTML";
+		mailOptions.text = "Solicitud enviada <br>";
+		mailOptions.text += "<hr>";
+		mailOptions.text += "Nombre : "+ req.body.nombre;
+		mailOptions.text += "Descripción : "+ req.body.descripcion;
+		mailOptions.text += "Email : "+ req.body.email;
+		mailOptions.text += "Teléfono : "+ req.body.telefono;
+		mailOptions.text += "Empresa : "+ req.body.empresa;
+		mailOptions.text += "Num Empleados : "+ req.body.numempleado;
+		mailOptions.text += "Origen : "+ req.body.origen;
+		mailOptions.text += "Landing : "+ req.body.landing;
+		//mailOptions.cc = 'maleman@openser.com,malemanm@gmail.com,gmoran@openser.com,omoran5150@gmail.com,darevalo@open.mx'
+		//EMAIL A OPENSER
 		mailerTransporter.sendMail(mailOptions, function (error, info) {
 			if (error) {
 				console.log(error);
@@ -59,6 +70,17 @@ exports.saveLead = function (req, res) {
 				console.log('Email enviado' + info.response);
 			}
 		});
+		//EMAIL A PROSPECTO 
+		mailOptions.subject = "Gracias! " + req.body.landing;
+		mailerTransporter.sendMail(mailOptions, function (error, info) {
+			if (error) {
+				console.log(error);
+			}
+			else {
+				console.log('Email enviado' + info.response);
+			}
+		});
+
 		request.query(query, (err, resultado) => {
 			if (err) {
 				res.send(500, err);
