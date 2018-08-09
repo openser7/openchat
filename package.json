@@ -30,6 +30,7 @@
     "mssql": "*",
     "helmet": "*",
     "frameguard": "*",
-    "nodemailer": "*"
+    "nodemailer": "*",
+    "nodemon": "*"
   }
 }

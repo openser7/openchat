@@ -40,7 +40,7 @@
                 <label for="inputEmpresa">Empresa </label>
                 <input type="text" class="form-control" id="inputEmpresa" placeholder="Open Service" required>
             </div>
-            <div class="form-group">
+            <div class="form-group" id="textAreaDiv">
                 <label for="textAreaMensaje">Mensaje </label>
                 <textarea class="form-control" id="textAreaMensaje" rows="3"></textarea>
             </div>
@@ -48,6 +48,7 @@
                 <div class="form-group col-md-6">
                     <label for="selectNumEmpleados">Número de Empleados </label>
                     <select class="form-control" id="selectNumEmpleados" required>
+                        <option>-</option>
                         <option>Menor a 50</option>
                         <option>De 50 a 200</option>
                         <option>De 200 a 500</option>
@@ -57,6 +58,7 @@
                 <div class="form-group col-md-6">
                     <label for="selectOrigen">¿Cómo nos encontraste?</label>
                     <select id="selectOrigen" class="form-control" required>
+                        <option>-</option>
                         <option>Google</option>
                         <option>Facebook</option>
                         <option>Blog</option>
@@ -109,6 +111,25 @@
             }
         };
 
+        //GET Params for dynamic form 
+        var landing =  getUrlParameter('landing');//Parametro
+        var mensaje =  getUrlParameter('mensaje');//Parametro
+        var buttonColor =  getUrlParameter('buttoncolor');//Parametro
+        var formcolor =  getUrlParameter('formcolor');//Parametro
+        var redirect =  getUrlParameter('redirect');//Parametro
+        
+        if(landing == null ){
+            alert('Se requiere el parametro landing');
+        }
+
+        if(redirect == null ){
+            alert('Se requiere el parametro redirect');
+        }
+
+        if(mensaje == 's' || mensaje == "S"){
+            $('#textAreaDiv').hide();
+        }
+
         $('#send').click(function () {
             $('form')[0].classList.add('was-validated');
             if ($('#checkTermCond')[0].checked) {
@@ -117,12 +138,13 @@
                     url: "http://35.171.76.34:81/lead/save",
                     data: {
                         "nombre": $('#inputNombre').val(),
+                        "empresa" : $('#inputEmpresa').val(),
                         "descripcion": $('#textAreaMensaje').val(),
                         "email": $('#inputEmail').val(),
                         "telefono": $('#inputTelefono').val(),
                         "numempleado": $('#selectNumEmpleados').val(),
                         "origen": $('#selectOrigen').val(),
-                        "campania": getUrlParameter('campania')//Parametro
+                        "landing": landing //Enviar de cual landing es 
                     },
                     beforeSend: function (xhr) {
                         xhr.overrideMimeType("text/plain; charset=x-user-defined");
@@ -134,7 +156,7 @@
                         $('input').val('');
                         $('#send').val('Enviar');
                         // similar behavior as an HTTP redirect
-                        window.location.replace("https://www.openser.com/gracias/#wpcf7-f700-p1814-o1");
+                        window.location.replace(redirect == null ? "https://www.openser.com/gracias/#wpcf7-f700-p1814-o1": redirect);
                     } else {
                         alert('Error al guarda solicitud');
                     }

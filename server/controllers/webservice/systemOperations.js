@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var userModel = mongoose.model('user');
 var ticketModel = mongoose.model('ticket');
 var request = require('request');
+var mailer = require('nodemailer');
 /*
  * Carga la informacion de una empresa "WebService"
  */
@@ -35,24 +36,39 @@ exports.getInfoEmpresa = function (req, res) {
 	}
 }
 
-exports.saveLead = function(req, res ){
-	if(req.body.campania == null){
+exports.saveLead = function (req, res) {
+	if (req.body.landing == null) {
 		res.set({ 'content-type': 'application/json; charset=utf-8' });
 		res.send(500, "Campña requerida");
 	}
-	if(req.body.nombre && req.body.email && req.body.telefono && req.body.campania && req.body.origen){
-		var query = "insert into Leads (Nombre, Descripcion, Email, Telefono, NumEmpleado, Origen, Campania) VALUES ('"+req.body.nombre+"','"+req.body.descripcion+"','"+req.body.email+"','"+req.body.telefono+"','"+req.body.numempleado+"','"+req.body.origen+"','"+req.body.campania+"')";
+	if (req.body.nombre && req.body.email && req.body.telefono && req.body.landing && req.body.origen && req.body.empresa ) {
+		var query = "insert into Leads (Nombre, Descripcion, Email, Telefono, NumEmpleado, Origen, Landing, Empresa)"+
+					" VALUES ('" + req.body.nombre + "','" + req.body.descripcion + "','" + req.body.email + "','" + req.body.telefono + "','" + req.body.numempleado + "','" + req.body.origen + "','" + req.body.landing + "','"+req.body.empresa+"')";
 		var request = new global.sql.Request();
-		request.query(query,  (err, resultado) => {
+
+		var mailerTransporter = mailer.createTransport(global.config.mail);
+		var mailOptions = global.config.mailOptions;
+
+		mailOptions.subject = "Lead Mail " + req.body.landing;
+		mailOptions.text = "HTML";
+		mailerTransporter.sendMail(mailOptions, function (error, info) {
+			if (error) {
+				console.log(error);
+			}
+			else {
+				console.log('Email enviado' + info.response);
+			}
+		});
+		request.query(query, (err, resultado) => {
 			if (err) {
 				res.send(500, err);
 			}
 			if (resultado) {
 				res.status(200).jsonp(true);
-			} 
+			}
 		});
-	}else {
-		res.send(500,'Faltan Parametros Requeridos')
+	} else {
+		res.send(500, 'Faltan Parametros Requeridos')
 	}
 }
 
