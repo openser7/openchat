@@ -40,7 +40,7 @@
                 <label for="inputEmpresa">Empresa </label>
                 <input type="text" class="form-control" id="inputEmpresa" placeholder="Open Service" required>
             </div>
-            <div class="form-group" id="textAreaDiv">
+            <div class="form-group" id="textAreaDiv" sytle="display:none">
                 <label for="textAreaMensaje">Mensaje </label>
                 <textarea class="form-control" id="textAreaMensaje" rows="3"></textarea>
             </div>
@@ -112,22 +112,33 @@
         };
 
         //GET Params for dynamic form 
-        var landing =  getUrlParameter('landing');//Parametro
-        var mensaje =  getUrlParameter('mensaje');//Parametro
-        var buttonColor =  getUrlParameter('buttoncolor');//Parametro
-        var formcolor =  getUrlParameter('formcolor');//Parametro
-        var redirect =  getUrlParameter('redirect');//Parametro
-        
-        if(landing == null ){
+        var landing = getUrlParameter('landing');//Parametro
+        var mensaje = getUrlParameter('mensaje');//Parametro
+        var buttonColor = getUrlParameter('buttoncolor');//Parametro
+        var formcolor = getUrlParameter('formcolor');//Parametro
+        var redirect = getUrlParameter('redirect');//Parametro
+
+        if (landing == null) {
             alert('Se requiere el parametro landing');
         }
 
-        if(redirect == null ){
+        if (redirect == null) {
             alert('Se requiere el parametro redirect');
         }
 
-        if(mensaje == 's' || mensaje == "S"){
+        if (mensaje == 's' || mensaje == "S") {
+            $('#textAreaDiv').show();
+        } else {
             $('#textAreaDiv').hide();
+        }
+
+        //STYLE 
+        if (buttonColor) {
+            $('input#send').css('border-color', buttonColor);
+            $('input#send').css('background-color', buttonColor); $('input#send').css('border-color', buttonColor)
+        }
+        if (formcolor) {
+            $('body').css('background', formcolor)
         }
 
         $('#send').click(function () {
@@ -138,7 +149,7 @@
                     url: "http://35.171.76.34:81/lead/save",
                     data: {
                         "nombre": $('#inputNombre').val(),
-                        "empresa" : $('#inputEmpresa').val(),
+                        "empresa": $('#inputEmpresa').val(),
                         "descripcion": $('#textAreaMensaje').val(),
                         "email": $('#inputEmail').val(),
                         "telefono": $('#inputTelefono').val(),
@@ -156,14 +167,14 @@
                         $('input').val('');
                         $('#send').val('Enviar');
                         // similar behavior as an HTTP redirect
-                        window.location.replace(redirect == null ? "https://www.openser.com/gracias/#wpcf7-f700-p1814-o1": redirect);
+                        window.location.replace(redirect == null ? "https://www.openser.com/gracias/#wpcf7-f700-p1814-o1" : redirect);
                     } else {
                         alert('Error al guarda solicitud');
                     }
                     if (console && console.log) {
                         console.log("Service guardado con exito", data);
                     }
-                }).fail(function(err){
+                }).fail(function (err) {
                     console.log(err.responseText);
                     alert('Ocurrio un error:' + err.responseText);
                 });
