@@ -34,6 +34,9 @@
                 <div class="form-group col-md-6">
                     <label for="inputTelefono">Teléfono </label>
                     <input type="Telefono" class="form-control" id="inputTelefono" placeholder="Teléfono" type="tel" required>
+                    <div class="invalid-tooltip">
+                            Teléfono incorrecto.
+                        </div>
                 </div>
             </div>
             <div class="form-group">
@@ -110,7 +113,19 @@
                 }
             }
         };
-
+        function validatePhone(phoneNumber) {
+            var phoneNumberPattern = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
+            return phoneNumberPattern.test(phoneNumber);
+        }
+        function validarTelefono(){
+            if(validatePhone($('#inputTelefono').val()) == false ){
+                    $('#inputTelefono').addClass('is-invalid');
+                   return false;
+                } else {
+                    $('#inputTelefono').removeClass('is-invalid');
+                   return true;
+                }
+        }
         //GET Params for dynamic form 
         var landing = getUrlParameter('landing');//Parametro
         var mensaje = getUrlParameter('mensaje');//Parametro
@@ -144,41 +159,47 @@
 
         $('#send').click(function () {
             $('form')[0].classList.add('was-validated');
-            if ($('#checkTermCond')[0].checked) {
-                $.ajax({
-                    method: "POST",
-                    url: "http://35.171.76.34:81/lead/save",
-                    data: {
-                        "nombre": $('#inputNombre').val(),
-                        "empresa": $('#inputEmpresa').val(),
-                        "descripcion": $('#textAreaMensaje').val(),
-                        "email": $('#inputEmail').val(),
-                        "telefono": $('#inputTelefono').val(),
-                        "numempleado": $('#selectNumEmpleados').val(),
-                        "origen": $('#selectOrigen').val(),
-                        "landing": landing //Enviar de cual landing es 
-                    },
-                    beforeSend: function (xhr) {
-                        xhr.overrideMimeType("text/plain; charset=x-user-defined");
-                    },
-                }).done(function (data) {
-                    if (data == "true") {
-                        $('textarea').val('');
-                        $('form')[0].classList.remove('was-validated');
-                        $('input').val('');
-                        $('#send').val('Enviar');
-                        // similar behavior as an HTTP redirect
-                        window.location.replace(redirect == null ? "https://www.openser.com/gracias/#wpcf7-f700-p1814-o1" : redirect);
-                    } else {
-                        alert('Error al guarda solicitud');
-                    }
-                    if (console && console.log) {
-                        console.log("Service guardado con exito", data);
-                    }
-                }).fail(function (err) {
-                    console.log(err.responseText);
-                    alert('Ocurrio un error:' + err.responseText);
-                });
+            
+
+            if ($('form')[0].checkValidity() === true && validarTelefono() == true) {
+                if ($('#checkTermCond')[0].checked) {
+                    $.ajax({
+                        method: "POST",
+                        url: "http://35.171.76.34:81/lead/save",
+                        data: {
+                            "nombre": $('#inputNombre').val(),
+                            "empresa": $('#inputEmpresa').val(),
+                            "descripcion": $('#textAreaMensaje').val(),
+                            "email": $('#inputEmail').val(),
+                            "telefono": $('#inputTelefono').val(),
+                            "numempleado": $('#selectNumEmpleados').val(),
+                            "origen": $('#selectOrigen').val(),
+                            "landing": landing //Enviar de cual landing es 
+                        },
+                        beforeSend: function (xhr) {
+                            xhr.overrideMimeType("text/plain; charset=x-user-defined");
+                        },
+                    }).done(function (data) {
+                        if (data == "true") {
+                            $('textarea').val('');
+                            $('form')[0].classList.remove('was-validated');
+                            $('input').val('');
+                            $('#send').val('Enviar');
+                            // similar behavior as an HTTP redirect
+                            window.location.replace(redirect == null ? "https://www.openser.com/gracias/#wpcf7-f700-p1814-o1" : redirect);
+                        } else {
+                            alert('Error al guarda solicitud');
+                        }
+                        if (console && console.log) {
+                            console.log("Service guardado con exito", data);
+                        }
+                    }).fail(function (err) {
+                        console.log(err.responseText);
+                        alert('Ocurrio un error:' + err.responseText);
+                    });
+                }
+
+
             }
         });
 

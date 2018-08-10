@@ -52,7 +52,7 @@ exports.saveLead = function (req, res) {
 		var mailOptions = {};
 
 		mailOptions.subject = "Lead Mail " + req.body.landing;
-		mailOptions.html = "Solicitud enviada <br>";
+		mailOptions.html = "Solicitud OpenSer de : <br>";
 		mailOptions.html += "<hr>";
 		mailOptions.html += "<br> <b>Nombre : </b>"+ req.body.nombre;
 		mailOptions.html += "<br> <b>Descripción : </b>"+ req.body.descripcion;
@@ -61,6 +61,7 @@ exports.saveLead = function (req, res) {
 		mailOptions.html += "<br> <b>Empresa : </b>"+ req.body.empresa;
 		mailOptions.html += "<br> <b>Num Empleados : </b>"+ req.body.numempleado;
 		mailOptions.html += "<br> <b>Origen : </b>"+ req.body.origen;
+		mailOptions.html += "<hr>";
 		mailOptions.html += "<br> <b>Landing : </b>"+ req.body.landing;
 		mailOptions.to ="roberto.saldivararm@gmail.com";
 		mailOptions.from ="rsaldivar@openservice.mx";
