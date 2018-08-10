@@ -11,10 +11,14 @@ var express = require('express'),
     sql = require('mssql'),
     helmet = require('helmet'),
     frameguard = require('frameguard'),
-    mailer = require('nodemailer');
+    mailer = require('nodemailer'),
+    path = require('path');
 
 //Load config
 global.config = require("./../config/config.json");
+global.serverDir = path.dirname(require.main.filename);
+global.appRoot = path.resolve(__dirname);
+
 
 //Create Server
 var server = null;
@@ -118,8 +122,8 @@ console.error = function (msg) {
     var mailerTransporter = mailer.createTransport(global.config.mail);
     var mailOptions = global.config.mailOptions;
 
-    mailOptions.subject = global.config.subjectError;
-    mailOptions.text = "Server report" + msg;
+    mailOptions.subject = 'Error : '+  global.config.subjectError;
+    mailOptions.html = "Server report" + msg;
     if(msg.indexOf('tls.createSecurePair()') > 0) return true;//Eliminar el error de MSSQL
     mailerTransporter.sendMail(mailOptions,function(error, info){
         if(error){

@@ -3,6 +3,8 @@ var userModel = mongoose.model('user');
 var ticketModel = mongoose.model('ticket');
 var request = require('request');
 var mailer = require('nodemailer');
+var fs = require('fs');
+var path = require('path');
 /*
  * Carga la informacion de una empresa "WebService"
  */
@@ -47,19 +49,21 @@ exports.saveLead = function (req, res) {
 		var request = new global.sql.Request();
 
 		var mailerTransporter = mailer.createTransport(global.config.mail);
-		var mailOptions = global.config.mailOptions;
+		var mailOptions = {};
 
 		mailOptions.subject = "Lead Mail " + req.body.landing;
-		mailOptions.text = "Solicitud enviada <br>";
-		mailOptions.text += "<hr>";
-		mailOptions.text += "Nombre : "+ req.body.nombre;
-		mailOptions.text += "Descripción : "+ req.body.descripcion;
-		mailOptions.text += "Email : "+ req.body.email;
-		mailOptions.text += "Teléfono : "+ req.body.telefono;
-		mailOptions.text += "Empresa : "+ req.body.empresa;
-		mailOptions.text += "Num Empleados : "+ req.body.numempleado;
-		mailOptions.text += "Origen : "+ req.body.origen;
-		mailOptions.text += "Landing : "+ req.body.landing;
+		mailOptions.html = "Solicitud enviada <br>";
+		mailOptions.html += "<hr>";
+		mailOptions.html += "<br> <b>Nombre : </b>"+ req.body.nombre;
+		mailOptions.html += "<br> <b>Descripción : </b>"+ req.body.descripcion;
+		mailOptions.html += "<br> <b>Email : </b>"+ req.body.email;
+		mailOptions.html += "<br> <b>Teléfono : </b>"+ req.body.telefono;
+		mailOptions.html += "<br> <b>Empresa : </b>"+ req.body.empresa;
+		mailOptions.html += "<br> <b>Num Empleados : </b>"+ req.body.numempleado;
+		mailOptions.html += "<br> <b>Origen : </b>"+ req.body.origen;
+		mailOptions.html += "<br> <b>Landing : </b>"+ req.body.landing;
+		mailOptions.to ="roberto.saldivararm@gmail.com";
+		mailOptions.from ="rsaldivar@openservice.mx";
 		//mailOptions.cc = 'maleman@openser.com,malemanm@gmail.com,gmoran@openser.com,omoran5150@gmail.com,darevalo@open.mx'
 		//EMAIL A OPENSER
 		mailerTransporter.sendMail(mailOptions, function (error, info) {
@@ -71,8 +75,14 @@ exports.saveLead = function (req, res) {
 			}
 		});
 		//EMAIL A PROSPECTO 
-		mailOptions.subject = "Gracias! " + req.body.landing;
-		mailerTransporter.sendMail(mailOptions, function (error, info) {
+		var mailOptionsProspecto = {} ;
+		mailOptionsProspecto.from ="rsaldivar@openservice.mx";//Email de Robot de marketing, ventas o info.
+		mailOptionsProspecto.subject = "Gracias! " ; // Subject de gratitud
+		mailOptionsProspecto.to = req.body.email;//Enviar al que lleno la forma
+		var rutaTemplate = path.resolve(global.appRoot+'/../client/public/lead/template.html');
+		var template = fs.readFileSync(rutaTemplate);
+		mailOptionsProspecto.html = template.toString();
+		mailerTransporter.sendMail(mailOptionsProspecto, function (error, info) {
 			if (error) {
 				console.log(error);
 			}
