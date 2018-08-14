@@ -259,7 +259,7 @@ io.sockets.on('connection', function (socket) {
      */
     socket.on('session close', function(userData){
         var socket = this;
-        global.Controllers.systemOperations.cerrarSessionUsuario(userData.room , userData.IdUsuario, socket);
+        global.Controllers.session.cerrarSessionUsuario(userData.room , userData.IdUsuario, socket);
     });
     /*
      * Evento para log off... se eliminan y desconectan todos los sockets de usuario.

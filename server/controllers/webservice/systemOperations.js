@@ -164,7 +164,7 @@ exports.clearDataBase = function (req, res) {//Metodo para limpiar las licencias
  */
 exports.cerrarSession = function (req, res) {
 	if (req.query && req.query.empresa && req.query.usuario) {
-		this.Controllers.systemOperations.cerrarSessionUsuario(req.query.empresa, req.query.usuario, null);
+		this.Controllers.session.cerrarSessionUsuario(req.query.empresa, req.query.usuario, null);
 		res.status(200).jsonp('session close send ');
 	} else {
 		res.send(500, 'Request Error');
