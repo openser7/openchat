@@ -25,6 +25,7 @@ exports.getInfoEmpresa = function (req, res) {
 		request.query(query, function (err, resultado) {
 			if (err) {
 				res.send(500, err);
+				return false;
 			}
 			if (resultado.recordset.length > 0) {
 				var cliente = resultado.recordset[0];
@@ -41,11 +42,12 @@ exports.getInfoEmpresa = function (req, res) {
 exports.saveLead = function (req, res) {
 	if (req.body.landing == null) {
 		res.set({ 'content-type': 'application/json; charset=utf-8' });
-		res.send(500, "Campña requerida");
+		res.send(500, "Campaña requerida");
+		return false;
 	}
-	if (req.body.nombre && req.body.email && req.body.telefono && req.body.landing && req.body.origen && req.body.empresa ) {
-		var query = "insert into Leads (Nombre, Descripcion, Email, Telefono, NumEmpleado, Origen, Landing, Empresa)"+
-					" VALUES ('" + req.body.nombre + "','" + req.body.descripcion + "','" + req.body.email + "','" + req.body.telefono + "','" + req.body.numempleado + "','" + req.body.origen + "','" + req.body.landing + "','"+req.body.empresa+"')";
+	if (req.body.nombre && req.body.email && req.body.telefono && req.body.landing && req.body.origen && req.body.empresa) {
+		var query = "insert into Leads (Nombre, Descripcion, Email, Telefono, NumEmpleado, Origen, Landing, Empresa)" +
+			" VALUES ('" + req.body.nombre + "','" + req.body.descripcion + "','" + req.body.email + "','" + req.body.telefono + "','" + req.body.numempleado + "','" + req.body.origen + "','" + req.body.landing + "','" + req.body.empresa + "')";
 		var request = new global.sql.Request();
 
 		var mailerTransporter = mailer.createTransport(global.config.mail);
@@ -54,17 +56,17 @@ exports.saveLead = function (req, res) {
 		mailOptions.subject = "Lead Mail " + req.body.landing;
 		mailOptions.html = "Solicitud OpenSer de : <br>";
 		mailOptions.html += "<hr>";
-		mailOptions.html += "<br> <b>Nombre : </b>"+ req.body.nombre;
-		mailOptions.html += "<br> <b>Descripción : </b>"+ req.body.descripcion;
-		mailOptions.html += "<br> <b>Email : </b>"+ req.body.email;
-		mailOptions.html += "<br> <b>Teléfono : </b>"+ req.body.telefono;
-		mailOptions.html += "<br> <b>Empresa : </b>"+ req.body.empresa;
-		mailOptions.html += "<br> <b>Num Empleados : </b>"+ req.body.numempleado;
-		mailOptions.html += "<br> <b>Origen : </b>"+ req.body.origen;
+		mailOptions.html += "<br> <b>Nombre : </b>" + req.body.nombre;
+		mailOptions.html += "<br> <b>Descripción : </b>" + req.body.descripcion;
+		mailOptions.html += "<br> <b>Email : </b>" + req.body.email;
+		mailOptions.html += "<br> <b>Teléfono : </b>" + req.body.telefono;
+		mailOptions.html += "<br> <b>Empresa : </b>" + req.body.empresa;
+		mailOptions.html += "<br> <b>Num Empleados : </b>" + req.body.numempleado;
+		mailOptions.html += "<br> <b>Origen : </b>" + req.body.origen;
 		mailOptions.html += "<hr>";
-		mailOptions.html += "<br> <b>Landing : </b>"+ req.body.landing;
-		mailOptions.to ="rsaldivar@openservice.mx";
-		mailOptions.from ="rsaldivar@openservice.mx";
+		mailOptions.html += "<br> <b>Landing : </b>" + req.body.landing;
+		mailOptions.to = "rsaldivar@openservice.mx";
+		mailOptions.from = "rsaldivar@openservice.mx";
 		//mailOptions.cc = 'maleman@openser.com,malemanm@gmail.com,gmoran@openser.com,omoran5150@gmail.com,darevalo@open.mx'
 		//EMAIL A OPENSER
 		mailerTransporter.sendMail(mailOptions, function (error, info) {
@@ -76,11 +78,11 @@ exports.saveLead = function (req, res) {
 			}
 		});
 		//EMAIL A PROSPECTO 
-		var mailOptionsProspecto = {} ;
-		mailOptionsProspecto.from ="rsaldivar@openservice.mx";//Email de Robot de marketing, ventas o info.
-		mailOptionsProspecto.subject = "Gracias! " ; // Subject de gratitud
+		var mailOptionsProspecto = {};
+		mailOptionsProspecto.from = "rsaldivar@openservice.mx";//Email de Robot de marketing, ventas o info.
+		mailOptionsProspecto.subject = "Gracias! "; // Subject de gratitud
 		mailOptionsProspecto.to = req.body.email;//Enviar al que lleno la forma
-		var rutaTemplate = path.resolve(global.appRoot+'/../client/public/lead/template.html');
+		var rutaTemplate = path.resolve(global.appRoot + '/../client/public/lead/template.html');
 		var template = fs.readFileSync(rutaTemplate);
 		mailOptionsProspecto.html = template.toString();
 		mailerTransporter.sendMail(mailOptionsProspecto, function (error, info) {
@@ -95,6 +97,7 @@ exports.saveLead = function (req, res) {
 		request.query(query, (err, resultado) => {
 			if (err) {
 				res.send(500, err);
+				return false;
 			}
 			if (resultado) {
 				res.status(200).jsonp(true);
@@ -113,7 +116,10 @@ exports.saveLead = function (req, res) {
 exports.clearSockets = function (req, res) {//Metodo para limpiar las licencias y usuarios
 	try {
 		userModel.find({}, function (err, users) {
-			if (err) res.send(500, err);
+			if (err) {
+				res.send(500, err);
+				return false;
+			}
 			else {
 				var modifiedUsers = [];
 				users.forEach(function (user) {
@@ -147,7 +153,10 @@ exports.clearSockets = function (req, res) {//Metodo para limpiar las licencias 
 exports.clearDataBase = function (req, res) {//Metodo para limpiar las licencias y usuarios
 	try {
 		userModel.remove({ 'room': req.query.empresa }, function (err) {
-			if (err) res.send(500, err);
+			if (err) {
+				res.send(500, err); 
+				return false;
+			}
 			else {
 				res.send(200, 'ClearDatabase');
 			}
@@ -264,7 +273,10 @@ exports.getLicenciasEmpresa = function (req, res) {
  */
 exports.licensesAvailable = function (req, res) {
 	userModel.find({ 'Status': { $ne: 0 }, 'IdAgente': { $ne: '0' } }, function (err, result) {
-		if (err) res.send(500, err.message);
+		if (err) {
+			res.send(500, err.message);
+			return false;
+		}
 		if (global.config.debug) ('GET /Licencias')
 		var resValue = { available: true };
 		if (result && result.length) //Ya no existe esta  propiedad
