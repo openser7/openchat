@@ -21,7 +21,7 @@ exports.getInfoEmpresa = function (req, res) {
 			' left join Configuracion on Configuracion.IdCliente = Cliente.IdCliente ' +
 			' left join Version on Version.IdVersion = Cliente.IdVersion ' +
 			" where Cliente.Nombre = '" + req.query.empresa + "' ";
-		var request = new global.sql.Request();
+		var request = new  global.sql.Request(global.pool);
 		request.query(query, function (err, resultado) {
 			if (err) {
 				res.send(500, err);
@@ -48,7 +48,7 @@ exports.saveLead = function (req, res) {
 	if (req.body.nombre && req.body.email && req.body.telefono && req.body.landing && req.body.origen && req.body.empresa) {
 		var query = "insert into Leads (Nombre, Descripcion, Email, Telefono, NumEmpleado, Origen, Landing, Empresa)" +
 			" VALUES ('" + req.body.nombre + "','" + req.body.descripcion + "','" + req.body.email + "','" + req.body.telefono + "','" + req.body.numempleado + "','" + req.body.origen + "','" + req.body.landing + "','" + req.body.empresa + "')";
-		var request = new global.sql.Request();
+		var request = new  global.sql.Request(global.pool);
 
 		var mailerTransporter = mailer.createTransport(global.config.mail);
 		var mailOptions = {};

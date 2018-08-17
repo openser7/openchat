@@ -7,7 +7,7 @@ var ticketModel = mongoose.model('ticket');
 exports.getSystemConfiguration = function (socket, callback) {
     if (socket.handshake.query.enterprise) {
         var query = "select * from Cliente where Nombre = '" + socket.handshake.query.enterprise + "' ";
-        var request = new global.sql.Request();
+        var request = new  global.sql.Request(global.pool);
         // query to the database and get the records
         request.query(query, function (err, resultado) {
             if (err) return callback(null, err);

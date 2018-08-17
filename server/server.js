@@ -91,8 +91,8 @@ global.Controllers = {
 var socketIo = require('./sockets');
 
 // Connect to your database
-global.sql = sql; //sql pool conection 
-global.sql.connect(global.config.sqlConfig, function (err) {
+global.sql = sql; //sql pool conection
+global.pool = new  global.sql.ConnectionPool(global.config.sqlConfig, function (err) {
     if (err) {
         console.log(err);// create Request object
     }
