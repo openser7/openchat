@@ -187,7 +187,9 @@
                             jQuery('input').val('');
                             jQuery('#send').val('Enviar');
                             // similar behavior as an HTTP redirect
-                            window.location.replace(redirect == null ? "https://www.openser.com/gracias/#wpcf7-f700-p1814-o1" : redirect);
+
+                           // window.location.replace(redirect == null ? "https://www.openser.com/gracias/#wpcf7-f700-p1814-o1" : redirect);
+                            window.top.location.href = redirect == null ? "https://www.openser.com/gracias/#wpcf7-f700-p1814-o1" : redirect;
                         } else {
                             alert('Error al guarda solicitud');
                         }

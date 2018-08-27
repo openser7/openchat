@@ -62,6 +62,12 @@ app.use(helmet());
 app.use(helmet.referrerPolicy({ policy: 'same-origin' }))// Referer
 app.disable('x-powered-by');
 
+// Allow from a specific host:
+app.use(frameguard({
+    action: 'allow-from',
+    domain: 'https://www.openser.com/'
+  }))
+
 // Conecttion DB
 mongoose.Promise = global.Promise;
 global.config.promiseLibrary = global.Promise;
