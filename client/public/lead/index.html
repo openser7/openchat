@@ -127,19 +127,19 @@
                 }
         }
         //GET Params for dynamic form 
-        var landing = getUrlParameter('landing');//Parametro
-        var mensaje = getUrlParameter('mensaje');//Parametro
-        var buttonColor = getUrlParameter('buttoncolor');//Parametro
-        var formcolor = getUrlParameter('formcolor');//Parametro
-        var redirect = getUrlParameter('redirect');//Parametro
-        var color = getUrlParameter('redirect');//Parametro
+        var landing = getUrlParameter('landing')||getUrlParameter('landing');//Parametro
+        var mensaje = getUrlParameter('mensaje')||getUrlParameter('mensaje');//Parametro
+        var buttonColor = getUrlParameter('buttoncolor')|| getUrlParameter('buttoncolor');//Parametro
+        var formcolor = getUrlParameter('formcolor')|| getUrlParameter('formcolor');//Parametro
+        var redirect =  getUrlParameter('redirect')||getUrlParameter('amp;redirect')//Parametro
+        var color = getUrlParameter('color')|| getUrlParameter('color');//Parametro
 
         if (landing == null) {
-            alert('Se requiere el parametro landing');
+           console.lo('Se requiere el parametro landing');
         }
 
         if (redirect == null) {
-            alert('Se requiere el parametro redirect');
+           console.lo('Se requiere el parametro redirect');
         }
 
         if (mensaje == 's' || mensaje == "S") {
