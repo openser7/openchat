@@ -93,12 +93,13 @@
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://www.openser.com/wp-includes/js/jquery/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script>
     <script>
+        
         var getUrlParameter = function getUrlParameter(sParam) {
             var sPageURL = decodeURIComponent(window.location.search.substring(1)),
                 sURLVariables = sPageURL.split('&'),
@@ -118,11 +119,11 @@
             return phoneNumberPattern.test(phoneNumber);
         }
         function validarTelefono(){
-            if(validatePhone($('#inputTelefono').val()) == false ){
-                    $('#inputTelefono').addClass('is-invalid');
+            if(validatePhone(jQuery('#inputTelefono').val()) == false ){
+                    jQuery('#inputTelefono').addClass('is-invalid');
                    return false;
                 } else {
-                    $('#inputTelefono').removeClass('is-invalid');
+                    jQuery('#inputTelefono').removeClass('is-invalid');
                    return true;
                 }
         }
@@ -143,37 +144,37 @@
         }
 
         if (mensaje == 's' || mensaje == "S") {
-            $('#textAreaDiv').show();
+            jQuery('#textAreaDiv').show();
         } else {
-            $('#textAreaDiv').hide();
+            jQuery('#textAreaDiv').hide();
         }
 
         //STYLE 
         if (buttonColor) {
-            $('input#send').css('border-color', buttonColor);
-            $('input#send').css('background-color', buttonColor); $('input#send').css('border-color', buttonColor)
+            jQuery('input#send').css('border-color', buttonColor);
+            jQuery('input#send').css('background-color', buttonColor); jQuery('input#send').css('border-color', buttonColor)
         }
         if (formcolor) {
-            $('body').css('background', formcolor)
+            jQuery('body').css('background', formcolor)
         }
 
-        $('#send').click(function () {
-            $('form')[0].classList.add('was-validated');
+        jQuery('#send').click(function () {
+            jQuery('form')[0].classList.add('was-validated');
             
 
-            if ($('form')[0].checkValidity() === true && validarTelefono() == true) {
-                if ($('#checkTermCond')[0].checked) {
-                    $.ajax({
+            if (jQuery('form')[0].checkValidity() === true && validarTelefono() == true) {
+                if (jQuery('#checkTermCond')[0].checked) {
+                    jQuery.ajax({
                         method: "POST",
                         url: "https://empresarial.openser.com/lead/save",
                         data: {
-                            "nombre": $('#inputNombre').val(),
-                            "empresa": $('#inputEmpresa').val(),
-                            "descripcion": $('#textAreaMensaje').val(),
-                            "email": $('#inputEmail').val(),
-                            "telefono": $('#inputTelefono').val(),
-                            "numempleado": $('#selectNumEmpleados').val(),
-                            "origen": $('#selectOrigen').val(),
+                            "nombre": jQuery('#inputNombre').val(),
+                            "empresa": jQuery('#inputEmpresa').val(),
+                            "descripcion": jQuery('#textAreaMensaje').val(),
+                            "email": jQuery('#inputEmail').val(),
+                            "telefono": jQuery('#inputTelefono').val(),
+                            "numempleado": jQuery('#selectNumEmpleados').val(),
+                            "origen": jQuery('#selectOrigen').val(),
                             "landing": landing //Enviar de cual landing es 
                         },
                         beforeSend: function (xhr) {
@@ -181,10 +182,10 @@
                         },
                     }).done(function (data) {
                         if (data == "true") {
-                            $('textarea').val('');
-                            $('form')[0].classList.remove('was-validated');
-                            $('input').val('');
-                            $('#send').val('Enviar');
+                            jQuery('textarea').val('');
+                            jQuery('form')[0].classList.remove('was-validated');
+                            jQuery('input').val('');
+                            jQuery('#send').val('Enviar');
                             // similar behavior as an HTTP redirect
                             window.location.replace(redirect == null ? "https://www.openser.com/gracias/#wpcf7-f700-p1814-o1" : redirect);
                         } else {
