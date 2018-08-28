@@ -53,7 +53,7 @@ exports.saveLead = function (req, res) {
 		var mailerTransporter = mailer.createTransport(global.config.mail);
 		var mailOptions = {};
 
-		mailOptions.subject = "Lead Mail " + req.body.landing + '-';
+		mailOptions.subject = "Lead " + req.body.landing + " " + req.body.nombre + " " + req.body.empresa;
 		mailOptions.html = "Solicitud OpenSer <br>";
 		mailOptions.html += "<hr>";
 		mailOptions.html += "<br> <b>Nombre : </b>" + req.body.nombre;
