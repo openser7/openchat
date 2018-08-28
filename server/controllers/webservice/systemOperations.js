@@ -65,7 +65,7 @@ exports.saveLead = function (req, res) {
 		mailOptions.html += "<br> <b>Origen : </b>" + req.body.origen;
 		mailOptions.html += "<hr>";
 		mailOptions.html += "<br> <b>Landing : </b>" + req.body.landing;
-		mailOptions.to = "info@openser.com";
+		mailOptions.to = "rsaldivar@openservice.mx";
 		mailOptions.from = "info@openser.com";
 		//mailOptions.cc = 'maleman@openser.com,malemanm@gmail.com,gmoran@openser.com,omoran5150@gmail.com,darevalo@open.mx'
 		//EMAIL A OPENSER
