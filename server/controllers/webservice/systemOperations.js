@@ -65,8 +65,8 @@ exports.saveLead = function (req, res) {
 		mailOptions.html += "<br> <b>Origen : </b>" + req.body.origen;
 		mailOptions.html += "<hr>";
 		mailOptions.html += "<br> <b>Landing : </b>" + req.body.landing;
-		mailOptions.to = "rsaldivar@openservice.mx";
-		mailOptions.from = "rsaldivar@openservice.mx";
+		mailOptions.to = "info@openser.com";
+		mailOptions.from = "info@openser.com";
 		//mailOptions.cc = 'maleman@openser.com,malemanm@gmail.com,gmoran@openser.com,omoran5150@gmail.com,darevalo@open.mx'
 		//EMAIL A OPENSER
 		mailerTransporter.sendMail(mailOptions, function (error, info) {
@@ -79,7 +79,7 @@ exports.saveLead = function (req, res) {
 		});
 		//EMAIL A PROSPECTO 
 		var mailOptionsProspecto = {};
-		mailOptionsProspecto.from = "rsaldivar@openservice.mx";//Email de Robot de marketing, ventas o info.
+		mailOptionsProspecto.from = "info@openser.com";//Email de Robot de marketing, ventas o info.
 		mailOptionsProspecto.subject = "Gracias! "; // Subject de gratitud
 		mailOptionsProspecto.to = req.body.email;//Enviar al que lleno la forma
 		var rutaTemplate = path.resolve(global.appRoot + '/../client/public/lead/template.html');
