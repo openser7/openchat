@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+
+    <title>Get OpenSer</title>
+</head>
+
+<body>
+    <div class="container">
+        <form class="needs-validation" novalidate>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="inputNombre">Name </label>
+                    <input type="text" class="form-control" id="inputNombre" placeholder="Name" required>
+                    <div class="invalid-tooltip">
+                        Name required.
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputEmail">Email</label>
+                    <input type="email" class="form-control" id="inputEmail" placeholder="Email" type="email" required>
+                    <div class="invalid-tooltip">
+                        Email required.
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputTelefono">Phone</label>
+                    <input type="Telefono" class="form-control" id="inputTelefono" placeholder="Phone" type="tel" required>
+                    <div class="invalid-tooltip">
+                        Phone required.
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <label for="inputEmpresa">Enterprise</label>
+                    <input type="text" class="form-control" id="inputEmpresa" placeholder="Openser" required>
+                    <div class="invalid-tooltip">
+                            Enterprise required.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" id="textAreaDiv" sytle="display:none">
+                <label for="textAreaMensaje">Message </label>
+                <textarea class="form-control" id="textAreaMensaje" rows="3"></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="selectNumEmpleados">Number of employees                        </label>
+                    <select class="form-control" id="selectNumEmpleados" required>
+                        <option>-</option>
+                        <option> Less Than 50</option>
+                        <option> 50 - 200</option>
+                        <option> 200 - 500</option>
+                        <option> More that 500 </option>
+                    </select>
+                    <div class="invalid-tooltip">
+                            Select a different option
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="selectOrigen">How did you find us ?</label>
+                    <select id="selectOrigen" class="form-control" required>
+                        <option>-</option>
+                        <option>Google</option>
+                        <option>Facebook</option>
+                        <option>Blog</option>
+                        <option>Email</option>
+                        <option>Revista</option>
+                        <option>Otro</option>
+                    </select>
+                    <div class="invalid-tooltip">
+                            Select a different option
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="checkTermCond" required>
+                    <label class="form-check-label" for="gridCheck">
+                            I accept the
+                        <a href="https://www.openser.com/aviso-de-privacidad/" target="_blank">terms and conditions </a>.
+                    </label>
+                    <div class="invalid-feedback">It is necessary to accept the terms and conditions.
+                    </div>
+                </div>
+            </div>
+            <input type="button" id="send" class="btn btn-primary" value="Send">
+        </form>
+    </div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://www.openser.com/wp-includes/js/jquery/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+    <script>
+
+        var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : sParameterName[1];
+                }
+            }
+        };
+        function validatePhone(phoneNumber) {
+            var phoneNumberPattern = /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/;
+            return phoneNumberPattern.test(phoneNumber);
+        }
+        function validarTelefono() {
+            if (validatePhone(jQuery('#inputTelefono').val()) == false) {
+                jQuery('#inputTelefono').addClass('is-invalid');
+                jQuery('#inputTelefono').get(0).setCustomValidity('Invalid');
+                return false;
+            } else {
+                jQuery('#inputTelefono').removeClass('is-invalid');
+                jQuery('#inputTelefono').get(0).setCustomValidity('');
+                return true;
+            }
+        }
+        function validarOpciones(id) {
+            if (jQuery(id).val() == "-") {
+                jQuery(id).addClass('is-invalid');
+                jQuery(id).get(0).setCustomValidity('Invalid');
+                return false;
+            } else {
+                jQuery(id).removeClass('is-invalid');
+                jQuery(id).get(0).setCustomValidity('');
+                return true;
+            }
+        }
+        //GET Params for dynamic form 
+        var landing = getUrlParameter('landing') || getUrlParameter('landing');//Parametro
+        var mensaje = getUrlParameter('mensaje') || getUrlParameter('mensaje');//Parametro
+        var buttonColor = getUrlParameter('buttoncolor') || getUrlParameter('buttoncolor');//Parametro
+        var formcolor = getUrlParameter('formcolor') || getUrlParameter('formcolor');//Parametro
+        var redirect = getUrlParameter('redirect') || getUrlParameter('amp;redirect')//Parametro
+        var color = getUrlParameter('color') || getUrlParameter('color');//Parametro
+
+        if (landing == null) {
+            console.lo('Se requiere el parametro landing');
+        }
+
+        if (redirect == null) {
+            console.lo('Se requiere el parametro redirect');
+        }
+
+        if (mensaje == 's' || mensaje == "S") {
+            jQuery('#textAreaDiv').show();
+        } else {
+            jQuery('#textAreaDiv').hide();
+        }
+
+        //STYLE 
+        if (buttonColor) {
+            jQuery('input#send').css('border-color', buttonColor);
+            jQuery('input#send').css('background-color', buttonColor); jQuery('input#send').css('border-color', buttonColor)
+        }
+        if (formcolor) {
+            jQuery('body').css('background', formcolor)
+        }
+
+        jQuery('#send').click(function () {
+            jQuery('form')[0].classList.add('was-validated');
+            var validacion = validarTelefono()
+                && validarOpciones('#selectNumEmpleados')
+                && validarOpciones('#selectOrigen')
+                && jQuery('form')[0].checkValidity();
+            if (validacion) {
+                if (jQuery('#checkTermCond')[0].checked) {
+                    jQuery.ajax({
+                        method: "POST",
+                        url: "https://empresarial.openser.com/lead/save",
+                        data: {
+                            "nombre": jQuery('#inputNombre').val(),
+                            "empresa": jQuery('#inputEmpresa').val(),
+                            "descripcion": jQuery('#textAreaMensaje').val(),
+                            "email": jQuery('#inputEmail').val(),
+                            "telefono": jQuery('#inputTelefono').val(),
+                            "numempleado": jQuery('#selectNumEmpleados').val(),
+                            "origen": jQuery('#selectOrigen').val(),
+                            "landing": landing //Enviar de cual landing es 
+                        },
+                        beforeSend: function (xhr) {
+                            xhr.overrideMimeType("text/plain; charset=x-user-defined");
+                        },
+                    }).done(function (data) {
+                        if (data == "true") {
+                            jQuery('textarea').val('');
+                            jQuery('form')[0].classList.remove('was-validated');
+                            jQuery('input').val('');
+                            jQuery('#send').val('Enviar');
+                            // similar behavior as an HTTP redirect
+
+                            // window.location.replace(redirect == null ? "https://www.openser.com/gracias/#wpcf7-f700-p1814-o1" : redirect);
+                            window.top.location.href = redirect == null ? "https://www.openser.com/gracias/#wpcf7-f700-p1814-o1" : redirect;
+                        } else {
+                            alert('Error al guarda solicitud');
+                        }
+                        if (console && console.log) {
+                            console.log("Service guardado con exito", data);
+                        }
+                    }).fail(function (err) {
+                        console.log(err.responseText);
+                        alert('Ocurrio un error:' + err.responseText);
+                    });
+                }
+
+
+            }
+        });
+
+
+    </script>
+</body>
+
+</html>
