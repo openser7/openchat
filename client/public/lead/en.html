@@ -185,6 +185,7 @@
                 && jQuery('form')[0].checkValidity();
             if (validacion) {
                 if (jQuery('#checkTermCond')[0].checked) {
+                    jQuery('#send').prop('disabled', true);
                     jQuery.ajax({
                         method: "POST",
                         url: "https://empresarial.openser.com/lead/save",
@@ -219,6 +220,7 @@
                         }
                     }).fail(function (err) {
                         console.log(err.responseText);
+                        jQuery('#send').prop('disabled', false);
                         alert('Ocurrio un error:' + err.responseText);
                     });
                 }
