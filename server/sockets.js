@@ -57,8 +57,10 @@ io.sockets.on('connection', function (socket) {
                         if (err) {
                             console.log(err);
                         } else {
-                            //INFORMAR QUE EL USARIO ESTA ONLINE
-                            io.to(userModel.room).emit('user online', userModel);
+                            //INFORMAR a todo el ROOM que QUE EL USARIO ESTA ONLINE
+                            if(userModel.IdTipoRol != "2"){
+                                io.to(userModel.room).emit('user online', userModel);
+                            }
                             // ACTUALIZAR INFORMACION DEL USUARIO 
                             socket.emit('session', {
                                 session: userModel.session,
@@ -67,10 +69,8 @@ io.sockets.on('connection', function (socket) {
                             socket.emit('enterprise',responseJson);
                             // VARIABLES AUXILIARPES PARA SABER A QUIEN PERTENECE EL SOCKET
                             socket.Model = userModel;
-                            if (global.config.debug) console.log('Enviar el total de instancias ' + userModel.NombreCompleto);
-                            global.Controllers.session.getTotalInstances(userModel.room, socket.configEnterprise.Nombre, socket.configEnterprise.Licencias, socket);
                             //DESPUES DE ACTUALIZAR LA INFORMACION DEL USUARIO SE ENVIARA LA LISTA DE USUARIOS DE LA EMPRESA QUE ESTEN "ONLINE"
-                            if (global.config.debug) console.log('Enviar lista de usuarios de su ROOM a ' + userModel.NombreCompleto);
+                            if (global.config.debug && userModel.NombreCompleto ) console.log('Enviar lista de usuarios de su ROOM a ' + userModel.NombreCompleto);
                             global.Controllers.user.getUsersChatList(userModel, function (err, usersList) {
                                 if (err) console.log(err);
                                 else {
@@ -78,8 +78,9 @@ io.sockets.on('connection', function (socket) {
                                 }
                             });
 
-                            if (global.config.debug) console.log('Limpiar los sockets para' + userModel.NombreCompleto);
-
+                            if (global.config.debug && userModel.NombreCompleto ) console.log('Enviar el total de instancias ' + userModel.NombreCompleto);
+                            global.Controllers.session.getTotalInstances(userModel.room, socket.configEnterprise.Nombre, socket.configEnterprise.Licencias, socket);
+                            
                         }
                     });
                 } else {
@@ -240,7 +241,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('disconnect', function (reason) {
         var socket = this;
         if (socket.Model) {
-            if (global.config.debug) console.log('disconnect - ' + socket.Model.NombreCompleto);
+            if (global.config.debug && socket.Model.NombreCompleto ) console.log('disconnect - ' + socket.Model.NombreCompleto);
             global.Controllers.user.deleteSocketForUser(socket, function (err, user, socket, statusAnt) {
                 if (err) console.log(err);
                 else {
@@ -266,7 +267,6 @@ io.sockets.on('connection', function (socket) {
      */
     socket.on('logoff', function (userData, browserTabInfo) {
         var socket = this;
-        if (global.config.debug) console.log('Cierre de Session - ' + socket.Model.NombreCompleto);
         if (socket && socket.Model) {
             global.Controllers.user.logOff(userData, socket, function (err, user) {
                 if (err) console.log("Error:  " + err);

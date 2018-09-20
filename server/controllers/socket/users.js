@@ -18,11 +18,13 @@ exports.getIdUser = function (cveUsuario, callback) {
 /**
  * Obtener el id del usuario por _id 
  */
-exports.findById = function (idUser, callback) {
-    UserModel.findById(idUser, function (err, user) {
-        if (err) console.log("No se encontro el usuario" + err);
-        else callback(err, user);
-    });
+exports.findById = function (id, callback) {
+    if(id != null){   
+        UserModel.findById(id, function (err, user) {
+            if (err) console.log("No se encontro el usuario" + err);
+            else callback(err, user);
+        });
+    }
 };
 /**
  * Obtener el id del usuario, por clave y empresa (SOLO USADO PARA LOGEAR)

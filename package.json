@@ -25,7 +25,7 @@
     "frameguard": "*",
     "helmet": "*",
     "method-override": "^3.0.0",
-    "mongoose": "^5.0.16",
+    "mongoose": "^5.2",
     "mssql": "*",
     "multiparty": "4.2.0",
     "nodemailer": "*",

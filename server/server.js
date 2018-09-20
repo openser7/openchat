@@ -71,7 +71,7 @@ app.use(frameguard({
 // Conecttion DB
 mongoose.Promise = global.Promise;
 global.config.promiseLibrary = global.Promise;
-//mongoose.set('debug', global.config.debug);
+mongoose.set('debug', global.config.debug);
 
 // Connect to mongodb
 mongoose.connect(global.config.dbUrl, global.config.dbConfig);
