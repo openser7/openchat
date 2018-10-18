@@ -30,10 +30,11 @@ exports.findById = function (id, callback) {
  * Obtener el id del usuario, por clave y empresa (SOLO USADO PARA LOGEAR)
  * En el cliente debe tener el ID de usuario para hacer las operaciones
  */
-exports.findByCveUsuario = function (userModel, callback) {
+exports.findByCveUsuario = function (userModel, callback) { 
     var CveUsuario = userModel.CveUsuario ? userModel.CveUsuario : '';
     var Enterprise = userModel.Enterprise ? userModel.Enterprise : '';
-    UserModel.find({ 'CveUsuario': CveUsuario, 'room': Enterprise }, function (err, user) {
+    var IdUsuario = userModel.IdUsuario ? userModel.IdUsuario : '';
+    UserModel.find({ 'CveUsuario': CveUsuario, 'room': Enterprise, 'IdUsuario' : IdUsuario }, function (err, user) {
         if (err) console.log("No se encontro el usuario" + err);
         else callback(err, user[0]);
     });
@@ -44,16 +45,20 @@ exports.findByCveUsuario = function (userModel, callback) {
  */
 exports.findByUser = function (user, callback) {
     var controller = this;
-    this.findById(user._id, function (err, userDb) { //Se buscar por ID.
-        if (err) console.log("No se encontro el usuario" + err);
-        else {
-            if( userDb == null){ //Si no lo encuentra por ID; lo buscar por CVEUSUARIO y EMPRESA
-                controller.findByCveUsuario(user, callback);
-            } else {
-                callback(err, userDb);
+    if(typeof user._id !== undefined){
+        this.findById(user._id, function (err, userDb) { //Se buscar por ID.
+            if (err) console.log("No se encontro el usuario" + err);
+            else {
+                if( userDb == null){ //Si no lo encuentra por ID; lo buscar por CVEUSUARIO y EMPRESA
+                    controller.findByCveUsuario(user, callback);
+                } else {
+                    callback(err, userDb);
+                }
             }
-        }
-    })
+        })
+    } else {      
+        controller.findByCveUsuario(user, callback);
+    }
 };
 /*
  *  Log in de Usuario... ACtualiza los sockets o crea el usuario en la BD.
@@ -151,7 +156,7 @@ exports.converLocalStorageToUserModel = function(localStorage, userModel){
  * Get users list  for enterprise (room)
  */
 exports.getUsersChatList = function (userModel, callback) {
-    UserModel.find({ IdAgente: { $ne: '0' }, 'room': userModel.room  }, function (err, users) {
+    UserModel.find({ IdAgente: { $ne: '0' }, IdTipoRol :  { $ne : '2'}, 'room': userModel.room  }, function (err, users) {
         callback(err, users);
     })
 };

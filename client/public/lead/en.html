@@ -188,6 +188,7 @@
                     jQuery('#send').prop('disabled', true);
                     jQuery.ajax({
                         method: "POST",
+                        timeout: 300000,//5min
                         url: "https://empresarial.openser.com/lead/save",
                         data: {
                             "nombre": jQuery('#inputNombre').val(),

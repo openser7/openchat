@@ -75,10 +75,32 @@ mongoose.set('debug', global.config.debug);
 
 // Connect to mongodb
 mongoose.connect(global.config.dbUrl, global.config.dbConfig);
+// CONNECTION EVENTS
+// When successfully connected
+mongoose.connection.on('connected', function () {  
+  console.log('Mongoose default connection open to ' + global.config.dbUrl);
+}); 
 
+// If the connection throws an error
+mongoose.connection.on('error',function (err) {  
+  console.log('Mongoose default connection error: ' + err);
+}); 
+
+// When the connection is disconnected
+mongoose.connection.on('disconnected', function () {  
+  console.log('Mongoose default connection disconnected'); 
+});
 // Load models "Mongoose"
 var models = require('./models')(app, mongoose);
+// If the Node process ends, close the Mongoose connection 
+process.on('SIGINT', function() {  
+    mongoose.connection.close(function () { 
+      console.log('Mongoose default connection disconnected through app termination'); 
+      process.exit(0); 
+    }); 
+  }); 
 
+  
 // Clear Sockets[] the users
 var usuarios = mongoose.model('user');
 usuarios.update({

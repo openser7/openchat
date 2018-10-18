@@ -8,55 +8,61 @@ var UserModel = mongoose.model('user');
  * Evento que te elimina de usuarios conectados, 
  */
 exports.registerMessage = function (socket, toUser, message, callback) {
-	if(global.config.debug)console.log('Registrando mensaje de : ' + socket.Model.NombreCompleto + ' a ' + toUser.NombreCompleto);
+	//if(global.config.debug)console.log('Registrando mensaje de : ' + socket.Model.NombreCompleto + ' a ' + toUser.NombreCompleto);
 	var fromUserModel = socket.Model;
 	var text = message;
 	var controller = this;
+	try{
 
-	var idUsuarioFrom = UserModel.findById( toUser._id, function (err, toUserModel) {
-		if (err) console.log(err);
-		else {
-			controller.getConversationByUsers ( [fromUserModel, toUserModel], 0 , function (err, conversation) {
-				if (err) console.log(err);
-				else {
-					var author = fromUserModel;
-					var receptor = toUserModel;
-					//Generar la estructura del mensaje
-					var message = new MessageModel({
-						message_body: text, //Descripcion del mensaje
-						author: author._id //Autor del mensaje
-					});
-
-					//Conversacion existente ?
-					if (conversation.length > 0) {
-						message.conversation = conversation[0]._id;
-						message.save(function (err, newMessage) {
-							if (err) console.log(err);
-							callback(err, newMessage, receptor, author);
+		var idUsuarioFrom = UserModel.findById( toUser._id, function (err, toUserModel) {
+			if (err) console.log(err);
+			else {
+				controller.getConversationByUsers ( [fromUserModel, toUserModel], 0 , function (err, conversation) {
+					if (err) console.log(err);
+					else {
+						var author = fromUserModel;
+						var receptor = toUserModel;
+						//Generar la estructura del mensaje
+						var message = new MessageModel({
+							message_body: text, //Descripcion del mensaje
+							author: author._id //Autor del mensaje
 						});
-					} else { //Crear la conversacion
-						var conversation = new ConversationModel({
-							participants: [fromUserModel, toUserModel] 
-						});
-						conversation.save(function (err, newConversation) {
-							if (err) console.log(err);
-							else { //Guardar el primer mensaje.
-								message.conversation = newConversation._id;
-								message.save(function (err, newMessage) {
-									if (err) console.log(err);
-									callback(err, newMessage, receptor, author);
-								});
-							}
-						});
+	
+						//Conversacion existente ?
+						if (conversation.length > 0) {
+							message.conversation = conversation[0]._id;
+							message.save(function (err, newMessage) {
+								if (err) console.log(err);
+								callback(err, newMessage, receptor, author);
+							});
+						} else { //Crear la conversacion
+							var conversation = new ConversationModel({
+								participants: [fromUserModel, toUserModel] 
+							});
+							conversation.save(function (err, newConversation) {
+								if (err) console.log(err);
+								else { //Guardar el primer mensaje.
+									message.conversation = newConversation._id;
+									message.save(function (err, newMessage) {
+										if (err) console.log(err);
+										callback(err, newMessage, receptor, author);
+									});
+								}
+							});
+						}
 					}
-				}
-			});
-		}
-	});
+				});
+			}
+		});
+	}
+	catch(e){
+		console.log('Error registrar mensaje' + e);
+	}
 };
 
 //Retorna la conversacion completa con un usuario especifico.
 exports.getMessagesByConversation = function (conversation, callback) {
+	try{
 	MessageModel.find({
 		conversation: conversation
 	}).select('createdAt message_body author message_read')
@@ -70,6 +76,10 @@ exports.getMessagesByConversation = function (conversation, callback) {
 				callback(err, messages);
 			}
 		});
+	}
+	catch(e){
+		console.log('Error al obtener mensajes de una conversacion');
+	}
 }
 
 //Buscar conversación en la cual participan ciertos usuarios "participantes de la conversacion" por su ObjetID
