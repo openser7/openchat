@@ -35,7 +35,10 @@ exports.findByCveUsuario = function (userModel, callback) {
     var Enterprise = userModel.Enterprise ? userModel.Enterprise : '';
     var IdUsuario = userModel.IdUsuario ? userModel.IdUsuario : '';
     UserModel.find({ 'CveUsuario': CveUsuario, 'room': Enterprise, 'IdUsuario' : IdUsuario }, function (err, user) {
-        if (err) console.log("No se encontro el usuario" + err);
+        if (err) {
+            console.log("No se encontro el usuario" + err);
+            callback(err, null);
+        }
         else callback(err, user[0]);
     });
 };
@@ -45,7 +48,7 @@ exports.findByCveUsuario = function (userModel, callback) {
  */
 exports.findByUser = function (user, callback) {
     var controller = this;
-    if(typeof user._id !== undefined){
+    if(typeof user._id !== "undefined"){
         this.findById(user._id, function (err, userDb) { //Se buscar por ID.
             if (err) console.log("No se encontro el usuario" + err);
             else {

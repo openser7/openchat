@@ -12,8 +12,8 @@ exports.getInfoEmpresa = function (req, res) {
 	if (req.query && req.query.empresa) {
 		if (global.config.debug) console.log("Get Info - " + req.query.empresa);
 		var query = ' select Cliente.*, IdGoogle as GoogleId, Google.Secreto as GoogleSecret,' +
-			' FolderWeb ' +
-			' SAML, Google, LogOut, LogOutSAML, ' +
+			' FolderWeb ,' +
+			' Cognito.SAML as SAML, Google, LogOut, LogOutSAML, ' +
 			' IdTipoVersion, Version.Comercial as Version, Version.Nombre as VersionApp' +
 			' from Cliente' +
 			' left join Google on Google.IdCliente = Cliente.IdCliente' +
@@ -67,7 +67,7 @@ exports.saveLead = function (req, res) {
 		mailOptions.html += "<br> <b>Landing : </b>" + req.body.landing;
 		mailOptions.to = "maleman@openser.com";
 		mailOptions.from = "info@openser.com";
-		mailOptions.cc = 'opensermx@gmail.com, maleman@openservice.mx, gmoran@openservice.mx, darevalo@openser.com,echavez@open.mx, mcastro@openservice.mx'
+		mailOptions.cc = 'opensermx@gmail.com, maleman@openservice.mx, gmoran@openservice.mx, darevalo@openser.com,echavez@open.mx, mcastro@openservice.mx, sbarcenas@openser.com'
 		//EMAIL A OPENSER
 		mailerTransporter.sendMail(mailOptions, function (error, info) {
 			if (error) {
