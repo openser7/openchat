@@ -53,7 +53,8 @@ exports = module.exports = function (app, mongoose) {
         }
     }, {    collection : 'users',
             usePushEach: true,
-            timestamps: true
+            timestamps: true,
+            versionKey: false
         });
     mongoose.model('user', userSchema);
 };

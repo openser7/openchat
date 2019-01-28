@@ -52,7 +52,7 @@
                 <textarea class="form-control" id="textAreaMensaje" rows="3"></textarea>
             </div>
             <div class="form-row">
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-12">
                     <label for="selectNumEmpleados">Number of employees                        </label>
                     <select class="form-control" id="selectNumEmpleados" required>
                         <option>-</option>
@@ -65,7 +65,7 @@
                             Select a different option
                     </div>
                 </div>
-                <div class="form-group col-md-6">
+                <!--div class="form-group col-md-6">
                     <label for="selectOrigen">How did you find us ?</label>
                     <select id="selectOrigen" class="form-control" required>
                         <option>-</option>
@@ -79,7 +79,7 @@
                     <div class="invalid-tooltip">
                             Select a different option
                     </div>
-                </div>
+                </div-->
             </div>
             <div class="form-group">
                 <div class="form-check">
@@ -181,7 +181,7 @@
             jQuery('form')[0].classList.add('was-validated');
             var validacion = validarTelefono()
                 && validarOpciones('#selectNumEmpleados')
-                && validarOpciones('#selectOrigen')
+                //&& validarOpciones('#selectOrigen')
                 && jQuery('form')[0].checkValidity();
             if (validacion) {
                 if (jQuery('#checkTermCond')[0].checked) {
@@ -197,7 +197,6 @@
                             "email": jQuery('#inputEmail').val(),
                             "telefono": jQuery('#inputTelefono').val(),
                             "numempleado": jQuery('#selectNumEmpleados').val(),
-                            "origen": jQuery('#selectOrigen').val(),
                             "landing": landing //Enviar de cual landing es 
                         },
                         beforeSend: function (xhr) {

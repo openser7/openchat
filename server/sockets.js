@@ -45,7 +45,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('connect user', function (localStorage, browserTabInfo, appVersion) {
         global.Controllers.session.getSystemConfiguration(socket, function (responseJson, error) { //Consultar sql server para validar el total
             if (error) {
-                console.log('ERROR NO SE PUEDE OBTENER LAS INOFRMACION DE SQL SERVER PARA LAS EMPRESAS');
+                console.log('ERROR NO SE PUEDE OBTENER LAS INFORMACION DE SQL SERVER PARA LAS EMPRESAS');
                 console.log(error);
                 socket.disconnect(0); //Desconectar si no exite el serial
             } else {

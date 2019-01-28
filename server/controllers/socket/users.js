@@ -204,14 +204,15 @@ exports.deleteSocketForUser = function (socket, callback) {
                         user.Status = 0;
                         user.disconnect = true;
                     }
-                    user.save(function (err, user) {
+                    delete user.__v;
+                    user.save(function (err, userDesconectado) {
                         if (err) {
                             console.log(err);
                         }
                         else {
                             //Registrar conexión cerrada
-                            historyController.add(user, socket.id, false, 'conexión cerrada');
-                            callback(err, user, socket, statusAnt);
+                            historyController.add(userDesconectado, socket.id, false, 'conexión cerrada');
+                            callback(err, userDesconectado, socket, statusAnt);
                         }
                     });
                 }
