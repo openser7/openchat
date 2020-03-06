@@ -25,12 +25,11 @@
     "frameguard": "*",
     "helmet": "*",
     "method-override": "^3.0.0",
-    "mongoose": "^5.2",
+    "mongoose": "^5.4.10",
     "mssql": "*",
     "multiparty": "4.2.0",
     "nodemailer": "*",
     "nodemon": "*",
-    "npm": "^6.3.0",
     "request": "^2.83.0",
     "socket.io": "^2.0"
   }

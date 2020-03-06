@@ -18,7 +18,7 @@ exports = module.exports = function (app, mongoose) {
         IdUsuario: {
             type: String
         },
-        Imagen: {
+        UrlImagen: {
              type: String
         },
         Nombre: {
@@ -37,6 +37,9 @@ exports = module.exports = function (app, mongoose) {
             type: Boolean //SI ya recibio el tour.
         },
         session: {
+            type: String
+        },
+        SessionTimeOut: {
             type: String
         },
         room : {

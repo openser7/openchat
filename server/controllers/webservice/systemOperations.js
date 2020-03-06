@@ -67,7 +67,7 @@ exports.saveLead = function (req, res) {
 		mailOptions.html += "<br> <b>Landing : </b>" + req.body.landing;
 		mailOptions.from = "info@openser.com";
 		mailOptions.to = "maleman@openser.com";
-		mailOptions.cc = 'opensermx@gmail.com, maleman@openservice.mx, gmoran@openservice.mx, darevalo@openser.com,echavez@open.mx, mcastro@openservice.mx, ailed@openser.com'
+		mailOptions.cc = 'opensermx@gmail.com, maleman@openservice.mx, brodriguezs@openser.com, gmoran@openservice.mx, darevalo@openser.com,echavez@open.mx, mcastro@openservice.mx, ailed@openser.com, dreyes@openser.com'
 		
 		reportError = mailOptions.html;
 		//EMAIL A OPENSER
@@ -104,7 +104,7 @@ exports.saveLead = function (req, res) {
 				mailOptions.html += reportError;
 				mailOptions.from = "info@openser.com";
 				mailOptions.to = "maleman@openser.com";
-				mailOptions.cc = 'opensermx@gmail.com, maleman@openservice.mx, gmoran@openservice.mx, darevalo@openser.com, rsaldivar@openser.com'
+				mailOptions.cc = 'opensermx@gmail.com, maleman@openservice.mx, brodriguezs@openser.com, gmoran@openservice.mx, darevalo@openser.com, rsaldivar@openser.com'
 				//EMAIL A OPENSER
 				mailerTransporter.sendMail(mailOptions, function (error, info) {
 					if (error) {

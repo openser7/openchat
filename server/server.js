@@ -66,7 +66,12 @@ app.disable('x-powered-by');
 app.use(frameguard({
     action: 'allow-from',
     domain: 'https://www.openser.com/'
-  }))
+  }));
+  
+
+app.use(helmet({
+    frameguard: false
+}));
 
 // Conecttion DB
 mongoose.Promise = global.Promise;
@@ -150,6 +155,9 @@ console.error = function (msg) {
     var mailerTransporter = mailer.createTransport(global.config.mail);
     var mailOptions = global.config.mailOptions;
 
+    if(msg.indexOf('socket')> 0  ) return false;
+    if(msg.indexOf('Socket')> 0  ) return false;
+
     mailOptions.subject = 'Error : '+  global.config.subjectError;
     mailOptions.html = "Server report" + msg;
     if(msg.indexOf('tls.createSecurePair()') > 0) return true;//Eliminar el error de MSSQL
@@ -158,7 +166,9 @@ console.error = function (msg) {
             console.log(error);
         }
         else {
-            console.log('Email enviado' + info.response);
+            if(error != null){
+                console.log('Email enviado' + info.response);
+            }
         }
     });
     process.stderr.write(msg);
