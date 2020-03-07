@@ -1,7 +1,5 @@
 var mongoose = require('mongoose');
 var userModel = mongoose.model('user');
-var ticketModel = mongoose.model('ticket');
-var request = require('request');
 var mailer = require('nodemailer');
 var fs = require('fs');
 var path = require('path');
