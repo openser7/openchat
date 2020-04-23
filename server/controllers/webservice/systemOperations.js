@@ -3,6 +3,31 @@ var userModel = mongoose.model('user');
 var mailer = require('nodemailer');
 var fs = require('fs');
 var path = require('path');
+
+var DynamicsWebApi = require('dynamics-web-api');
+var AuthenticationContext = require('adal-node').AuthenticationContext;
+
+//OAuth Token Endpoint
+var authorityUrl = "https://login.microsoftonline.com/fba44ac0-ba12-4ce6-9c49-3f2f2454a93c/oauth2/token";
+//CRM Organization URL
+var resource = 'https://grupoopen.crm.dynamics.com/';
+//Dynamics 365 Client Id when registered in Azure
+var clientId = 'd450e6b9-c6c7-46b3-97ac-eaf8992774c6';
+var username = 'maleman@openservice.mx';
+var password = 'qpr$37tt';
+var adalContext = new AuthenticationContext(authorityUrl);
+
+var correoscopiados = 'opensermx@gmail.com, maleman@openservice.mx, brodriguezs@openser.com, gmoran@openservice.mx, darevalo@openser.com,echavez@open.mx, mcastro@openservice.mx, ailed@openser.com, dreyes@openser.com';
+var correoscopiadosError = 'opensermx@gmail.com, maleman@openservice.mx, brodriguezs@openser.com, gmoran@openservice.mx, darevalo@openser.com, rsaldivar@openser.com'
+var correoPrincipal = "maleman@openser.com";
+var debug = false;
+
+if (debug) {
+	correoscopiados = 'rsaldivar@openser.com';
+	correoscopiadosError = correoscopiados;
+	correoPrincipal = 'roberto.saldivararm@gmail.com';
+}
+
 /*
  * Carga la informacion de una empresa "WebService"
  */
@@ -37,72 +62,31 @@ exports.getInfoEmpresa = function (req, res) {
 	}
 }
 
+
 exports.saveLead = function (req, res) {
 	if (req.body.landing == null) {
 		res.set({ 'content-type': 'application/json; charset=utf-8' });
 		res.send(500, "Campaña requerida");
 		return false;
 	}
-	if (req.body.nombre && req.body.email && req.body.telefono && req.body.landing  && req.body.empresa) {
+
+	var PETICION  = req;
+	var INFO = req.body;//INFOR 
+	if (INFO.nombre && INFO.email && INFO.telefono && INFO.landing && INFO.empresa) {
+
+		//GUARDAR LED Base de datos empresarial.
 		var query = "insert into Leads (Nombre, Descripcion, Email, Telefono, NumEmpleado, Origen, Landing, Empresa)" +
-			" VALUES ('" + req.body.nombre + "','" + req.body.descripcion + "','" + req.body.email + "','" + req.body.telefono + "','" + req.body.numempleado + "','" + "" + "','" + req.body.landing + "','" + req.body.empresa + "')";
+			" VALUES ('" + INFO.nombre + "','" + INFO.descripcion + "','" + INFO.email + "','" + INFO.telefono + "','" + INFO.numempleado + "','" + "" + "','" + INFO.landing + "','" + INFO.empresa + "')";
 		var request = new global.sql.Request(global.pool);
-
-		var mailerTransporter = mailer.createTransport(global.config.mail);
-		var mailOptions = {};
-		var reportError = "";
-		mailOptions.subject = "Lead " + req.body.landing + " " + req.body.nombre + " " + req.body.empresa;
-		mailOptions.html = "Solicitud OpenSer <br>";
-		mailOptions.html += "<hr>";
-		mailOptions.html += "<br> <b>Nombre : </b>" + req.body.nombre;
-		mailOptions.html += "<br> <b>Descripción : </b>" + req.body.descripcion;
-		mailOptions.html += "<br> <b>Email : </b>" + req.body.email;
-		mailOptions.html += "<br> <b>Teléfono : </b>" + req.body.telefono;
-		mailOptions.html += "<br> <b>Empresa : </b>" + req.body.empresa;
-		mailOptions.html += "<br> <b>Num Empleados : </b>" + req.body.numempleado;
-		//mailOptions.html += "<br> <b>Origen : </b>" + req.body.origen;
-		mailOptions.html += "<hr>";
-		mailOptions.html += "<br> <b>Landing : </b>" + req.body.landing;
-		mailOptions.from = "info@openser.com";
-		mailOptions.to = "maleman@openser.com";
-		mailOptions.cc = 'opensermx@gmail.com, maleman@openservice.mx, brodriguezs@openser.com, gmoran@openservice.mx, darevalo@openser.com,echavez@open.mx, mcastro@openservice.mx, ailed@openser.com, dreyes@openser.com'
-		
-		reportError = mailOptions.html;
-		//EMAIL A OPENSER
-		mailerTransporter.sendMail(mailOptions, function (error, info) {
-			if (error) {
-				console.log(error);
-			}
-			else {
-				console.log('Email enviado' + info.response);
-			}
-		});
-		//EMAIL A PROSPECTO 
-		var mailOptionsProspecto = {};
-		mailOptionsProspecto.from = "info@openser.com";//Email de Robot de marketing, ventas o info.
-		mailOptionsProspecto.subject = "Gracias! "; // Subject de gratitud
-		mailOptionsProspecto.to = req.body.email;//Enviar al que lleno la forma
-		var rutaTemplate = path.resolve(global.appRoot + '/../client/public/lead/template.html');
-		var template = fs.readFileSync(rutaTemplate);
-		mailOptionsProspecto.html = template.toString();
-		mailerTransporter.sendMail(mailOptionsProspecto, function (error, info) {
-			if (error) {
-				console.log(error);
-			}
-			else {
-				console.log('Email enviado' + info.response);
-			}
-		});
-
 		request.query(query, (err, resultado) => {
 			if (err) {
 				mailOptions.subject = "Lead " + req.body.landing + " " + req.body.nombre + " " + req.body.empresa;
 				mailOptions.html = "Error Guardar Lead DB OpenSer <br>";
-				mailOptions.html += "Ocurrio un error al guardar el LEAD en la base de datos : "+ err.toString();
+				mailOptions.html += "Ocurrio un error al guardar el LEAD en la base de datos : " + err.toString();
 				mailOptions.html += reportError;
 				mailOptions.from = "info@openser.com";
-				mailOptions.to = "maleman@openser.com";
-				mailOptions.cc = 'opensermx@gmail.com, maleman@openservice.mx, brodriguezs@openser.com, gmoran@openservice.mx, darevalo@openser.com, rsaldivar@openser.com'
+				mailOptions.to = correoPrincipal;
+				mailOptions.cc = correoscopiadosError;
 				//EMAIL A OPENSER
 				mailerTransporter.sendMail(mailOptions, function (error, info) {
 					if (error) {
@@ -112,13 +96,214 @@ exports.saveLead = function (req, res) {
 						console.log(' Reporte error, Email enviado' + info.response);
 					}
 				});
-				res.send(500, err);
 				return false;
 			}
-			if (resultado) {
-				res.status(200).jsonp(true);
+		});
+
+		var queryBuscarLead = "select Canal, Campania, IdCrmField from LeadLanding" +
+			" where LandingPage = '" + INFO.landing + "' ";
+
+		var ARMARTRACKING  = PETICION;
+		request.query(queryBuscarLead, function (err, resultado) {
+			if (err) {
+				//res.send(500, "Canal y campaña no registrados en la base de datos.");
+				console.log("Error no se encontro lead");
+			} else {
+				//Ahora que conocemos la info podemos guardar el LEAD en CRM
+				//add a callback as a parameter for your function
+				function acquireToken(dynamicsWebApiCallback) {
+					//a callback for adal-node
+					function adalCallback(error, token) {
+						if (!error) {
+							dynamicsWebApiCallback(token);
+						}
+						else {
+							console.log('Token has not been retrieved. Error: ' + error.stack);
+						}
+					}
+					//call a necessary function in adal-node object to get a token
+					adalContext.acquireTokenWithUsernamePassword(resource, username, password, clientId, adalCallback);
+				}
+
+				//create DynamicsWebApi object
+				var dynamicsWebApi = new DynamicsWebApi({
+					webApiUrl: 'https://grupoopen.api.crm.dynamics.com/api/data/v9.1/',
+					onTokenRefresh: acquireToken
+				});
+
+				var CrmField = 1000000 ;
+				var idCanal = 8;
+				if(resultado.recordset.length > 0){
+					if (resultado.recordset.length > 0 && resultado.recordset[0].Canal == "Web") {
+						idCanal = 8;
+					} else {
+						idCanal = 1;
+					}
+					CrmField = resultado.recordset[0].IdCrmField;
+				}
+
+				var numeroEmpleado = 10;
+				
+				if( INFO.numempleado.indexOf("500") > 0 && INFO.numempleado.indexOf("200") < 0){
+					numeroEmpleado = 1000; 
+				} else if (INFO.numempleado.indexOf("500") > 0 && INFO.numempleado.indexOf("200") > 0) {
+					numeroEmpleado = 500; 
+				} else if (INFO.numempleado.indexOf("50") > 0 && INFO.numempleado.indexOf("200") > 0) {
+					numeroEmpleado = 200; 
+				} else {
+					numeroEmpleado = 50; 
+				}
+
+				var nombreCompletoArray = INFO.nombre.split(" ");
+				var apellido = nombreCompletoArray[nombreCompletoArray.length - 1];
+				var nombre = INFO.nombre.replace(apellido, "");
+
+				var requestCrm = {
+					collection: "leads",
+					entity: {
+						subject: "Openser",
+						firstname: nombre,
+						lastname: apellido,
+						jobtitle: "",
+						companyname: INFO.empresa,
+						mobilephone: INFO.telefono,
+						telephone1: INFO.telefono,
+						description: INFO.descripcion != "" ? "Sin mensaje" : INFO.descripcion,
+						emailaddress1: INFO.email,
+						new_openser_landing_page : CrmField, 
+						numberofemployees: numeroEmpleado,
+						leadsourcecode: idCanal/**Sera consulta base de datos para conocer el dato, default 8 */
+					},
+					returnRepresentation: true
+				}
+
+				// //call dynamicsWebApi.createRequest function
+				console.log("Emitiendo el guardar el lead");
+				dynamicsWebApi.createRequest(requestCrm).then(function (record) {
+					console.dir(record, { color: true });
+					var subject = record.subject;
+					var link = 'https://grupoopen.crm.dynamics.com/main.aspx?appid=bcd312fd-55b5-e811-a85d-000d3a14026a&pagetype=entityrecord&etn=lead&id='
+					link += record.leadid;
+
+
+					var mailerTransporter = mailer.createTransport(global.config.mail);
+
+					var mailOptions = {};
+					var reportError = "";
+					mailOptions.subject = "Lead " + INFO.landing + " " + INFO.empresa;
+					mailOptions.html = "Solicitud OpenSer <br>";
+					mailOptions.html += "<hr>";
+					mailOptions.html += "<br> <b>Nombre : </b>" + INFO.nombre;
+					mailOptions.html += "<br> <b>Descripción : </b>" + INFO.descripcion;
+					mailOptions.html += "<br> <b>Email : </b>" + INFO.email;
+					mailOptions.html += "<br> <b>Teléfono : </b>" + INFO.telefono;
+					mailOptions.html += "<br> <b>Empresa : </b>" + INFO.empresa;
+					mailOptions.html += "<br> <b>Num Empleados : </b>" + INFO.numempleado;
+					//mailOptions.html += "<br> <b>Origen : </b>" + INFO.origen;
+					mailOptions.html += "<hr>";
+					mailOptions.html += "<br> <b>Landing : </b>" + INFO.landing;
+					mailOptions.html += "<br> <b>DynamicsLead : </b>  <a href='" + link + "'>Link</a>";
+					mailOptions.html += "<br><br><br><br><br><br><br><br><br> " +ARMARTRACKING.rawHeaders.toString() ;
+					mailOptions.from = "info@openser.com";
+					mailOptions.to = correoPrincipal;
+					mailOptions.cc = correoscopiados;
+
+					reportError = mailOptions.html;
+
+					var EMAILPROSPECTO = INFO.email;
+					//EMAIL A OPENSER
+					mailerTransporter.sendMail(mailOptions, function (error, info) {
+						if (error) {
+							console.log(error);
+						}
+						else {
+							console.log('Email enviado al vendedor' + info.response);
+							//=============================
+							//EMAIL A PROSPECTO 
+
+							var mailerTransporter = mailer.createTransport(global.config.mail);
+
+							var mailOptionsProspecto = {};
+							mailOptionsProspecto.from = "info@openser.com";//Email de Robot de marketing, ventas o info.
+							mailOptionsProspecto.subject = "Gracias! "; // Subject de gratitud
+							mailOptionsProspecto.to = EMAILPROSPECTO;//Enviar al que lleno la forma
+							var rutaTemplate = path.resolve(global.appRoot + '/../client/public/lead/template.html');
+							var template = fs.readFileSync(rutaTemplate);
+							mailOptionsProspecto.html = template.toString();
+							mailerTransporter.sendMail(mailOptionsProspecto, function (error, info) {
+								if (error) {
+									console.log(error);
+								}
+								else {
+									console.log('Email enviado a Prospecto' + info.response);
+								}
+							});
+						}
+					});
+
+				}).catch(function (error) {
+					//catch error here
+					console.log(error);
+					var mailerTransporter = mailer.createTransport(global.config.mail);
+
+					var mailOptions = {};
+					var reportError = "";
+					mailOptions.subject = "Lead " + INFO.landing + " " + INFO.empresa;
+					mailOptions.html = "Solicitud OpenSer <br>";
+					mailOptions.html += "<hr>";
+					mailOptions.html += "<br> <b>Nombre : </b>" + INFO.nombre;
+					mailOptions.html += "<br> <b>Descripción : </b>" + INFO.descripcion;
+					mailOptions.html += "<br> <b>Email : </b>" + INFO.email;
+					mailOptions.html += "<br> <b>Teléfono : </b>" + INFO.telefono;
+					mailOptions.html += "<br> <b>Empresa : </b>" + INFO.empresa;
+					mailOptions.html += "<br> <b>Num Empleados : </b>" + INFO.numempleado;
+					//mailOptions.html += "<br> <b>Origen : </b>" + INFO.origen;
+					mailOptions.html += "<hr>";
+					mailOptions.html += "<br> <b>Landing : </b>" + INFO.landing;
+					mailOptions.html += "<br> <b>DynamicsLead : </b>" + error.message ;
+					mailOptions.html += "<br><br><br><br><br><br><br><br><br> " +ARMARTRACKING.rawHeaders.toString() ;
+					mailOptions.from = "info@openser.com";
+					mailOptions.to = correoPrincipal;
+					mailOptions.cc = correoscopiados;
+
+					reportError = mailOptions.html;
+
+					var EMAILPROSPECTO = INFO.email;
+					//EMAIL A OPENSER
+					mailerTransporter.sendMail(mailOptions, function (error, info) {
+						if (error) {
+							console.log(error);
+						}
+						else {
+							console.log('Email enviado al vendedor' + info.response);
+							//=============================
+							//EMAIL A PROSPECTO 
+
+							var mailerTransporter = mailer.createTransport(global.config.mail);
+
+							var mailOptionsProspecto = {};
+							mailOptionsProspecto.from = "info@openser.com";//Email de Robot de marketing, ventas o info.
+							mailOptionsProspecto.subject = "Gracias! "; // Subject de gratitud
+							mailOptionsProspecto.to = EMAILPROSPECTO;//Enviar al que lleno la forma
+							var rutaTemplate = path.resolve(global.appRoot + '/../client/public/lead/template.html');
+							var template = fs.readFileSync(rutaTemplate);
+							mailOptionsProspecto.html = template.toString();
+							mailerTransporter.sendMail(mailOptionsProspecto, function (error, info) {
+								if (error) {
+									console.log(error);
+								}
+								else {
+									console.log('Email enviado a Prospecto' + info.response);
+								}
+							});
+						}
+					});
+
+				});
 			}
 		});
+
+		res.status(200).jsonp(true);
 	} else {
 		res.send(500, 'Faltan Parametros Requeridos')
 	}
