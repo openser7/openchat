@@ -108,7 +108,7 @@ process.on('SIGINT', function() {
   
 // Clear Sockets[] the users
 var usuarios = mongoose.model('user');
-usuarios.update({
+usuarios.updateMany({
     Status: 0,
     disconnect: true,
     status: 0,
