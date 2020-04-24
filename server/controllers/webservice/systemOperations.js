@@ -20,7 +20,7 @@ var adalContext = new AuthenticationContext(authorityUrl);
 var correoscopiados = 'opensermx@gmail.com, maleman@openservice.mx, brodriguezs@openser.com, gmoran@openservice.mx, darevalo@openser.com,echavez@open.mx, mcastro@openservice.mx, ailed@openser.com, dreyes@openser.com';
 var correoscopiadosError = 'opensermx@gmail.com, maleman@openservice.mx, brodriguezs@openser.com, gmoran@openservice.mx, darevalo@openser.com, rsaldivar@openser.com'
 var correoPrincipal = "maleman@openser.com";
-var debug = false;
+var debug = global.config.debug;
 
 if (debug) {
 	correoscopiados = 'rsaldivar@openser.com';
@@ -32,6 +32,8 @@ if (debug) {
  * Carga la informacion de una empresa "WebService"
  */
 exports.getInfoEmpresa = function (req, res) {
+	
+	global.logger.info("Se Requirio la informacion de la empresa:"+ req.query.empresa+ " __ " + req.ip + "  __ "+ req.host);
 	if (req.query && req.query.empresa) {
 		if (global.config.debug) console.log("Get Info - " + req.query.empresa);
 		var query = ' select Cliente.*, IdGoogle as GoogleId, Google.Secreto as GoogleSecret,' +

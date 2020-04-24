@@ -5,21 +5,21 @@ var express = require('express'),
     bodyParser = require("body-parser"),
     methodOverride = require("method-override"),
     fs = require("fs"),
-    request = require('request'),
     mongoose = require('mongoose'),
-    multiparty = require("multiparty"),
     sql = require('mssql'),
     helmet = require('helmet'),
     frameguard = require('frameguard'),
     mailer = require('nodemailer'),
-    path = require('path');
+    path = require('path'),
+    logger = require('./logger.js');
 
 //Load config
 global.config = require("./../config/config.json");
 global.serverDir = path.dirname(require.main.filename);
 global.appRoot = path.resolve(__dirname);
 
-
+logger.info("INICIO DE SERVER");
+global.logger = logger;
 //Create Server
 var server = null;
 try {
