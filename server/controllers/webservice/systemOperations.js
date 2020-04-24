@@ -33,8 +33,8 @@ if (debug) {
  */
 exports.getInfoEmpresa = function (req, res) {
 	
-	global.logger.info("Se Requirio la informacion de la empresa:"+ req.query.empresa+ " __ " + req.ip + "  __ "+ req.host);
 	if (req.query && req.query.empresa) {
+		global.logger.info("Se Requirio la informacion de la empresa:"+ req.query.empresa+ " __ " + req.ip + "  __ "+ req.host + " __"+ req.connection.remoteAddress );
 		if (global.config.debug) console.log("Get Info - " + req.query.empresa);
 		var query = ' select Cliente.*, IdGoogle as GoogleId, Google.Secreto as GoogleSecret,' +
 			' FolderWeb ,' +
@@ -60,12 +60,13 @@ exports.getInfoEmpresa = function (req, res) {
 			}
 		});
 	} else {
-		res.send(500, 'Request Error');
+		res.send(200, 'Ready');
 	}
 }
 
 
 exports.saveLead = function (req, res) {
+	global.logger.info("Guardar Lead:"+ req.query.empresa+ " __ " + req.ip + "  __ "+ req.host + " __"+ req.connection.remoteAddress );
 	if (req.body.landing == null) {
 		res.set({ 'content-type': 'application/json; charset=utf-8' });
 		res.send(500, "Campaña requerida");
@@ -73,7 +74,8 @@ exports.saveLead = function (req, res) {
 	}
 
 	var PETICION  = req;
-	var INFO = req.body;//INFOR 
+	var INFO = req.body;//INFO
+	global.logger.info("LEAD INFO :"+ JSON.stringify(INFO));
 	if (INFO.nombre && INFO.email && INFO.telefono && INFO.landing && INFO.empresa) {
 
 		//GUARDAR LED Base de datos empresarial.
