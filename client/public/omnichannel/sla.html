@@ -1,0 +1,56 @@
+<div id="omnichannel_sla">
+
+	<!-- Nombre -->
+	<div class="row">
+		<label class="lblName"></label>
+		<input type="text" class="name" maxlength="150">
+	</div>
+
+	<!-- Objetivo operativo -->
+	<div class="row">
+		<label class="lblObjective"></label>
+		<textarea class="objective" maxlength="100"></textarea>
+	</div>
+
+	<!-- Objetivos de SLA -->
+	<div class="row">
+		<label class="lblObjectives_title font17"></label>		
+	</div>
+	
+	<!-- Aviso -->
+	<div class="row">
+		<label class="lblBoxAdvise"></label>
+	</div>
+
+	<!-- Tiempos -->
+	<div class="row flex rowTime">
+		<div class="flex1 mRight100">
+			<label class="lblWaiting"></label>
+			<input type="text" class="waitingTime txtClock">
+		</div>
+		<div class="flex1">
+			<label class="lblSolution"></label>
+			<input type="text" class="solutionTime txtClock">
+		</div>
+	</div>
+
+	<!-- Porcentajes -->
+	<div class="row flex rowPercent">
+		<div class="flex1 mRight100">
+			<label class="lblWaitingEffective"></label>
+			<input type="text" class="waitingEffective txtPercent">
+		</div>
+		<div class="flex1">
+			<label class="lblSolutionEffective"></label>
+			<input type="text" class="solutionEffective txtPercent">
+		</div>
+	</div>
+
+	<div class="buttons">
+		<div class="btnBlack mouse btnSave"></div>
+	</div>
+</div>
+
+<script>
+    $OMNICHANNEL_SLA.start();
+</script>

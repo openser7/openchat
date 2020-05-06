@@ -1,0 +1,117 @@
+<div id="divMessages" class="noData omnichannel"> 
+    <div class="listLeft">
+        
+        <!-- Búsqueda -->
+        <div class="search">
+            <div class="search-body">
+                <i class="fa fa-search"></i>
+                <input class="txtSearch"> 
+            </div>
+
+            <!-- Icono de Filtro -->
+            <i class="fa fa-filter"></i>
+
+            <!-- Icono para ver todas las conversaciones activas -->
+            <i class="fa fa-eye"></i>
+            
+            <!-- Menú de filtros -->
+            <div class="menu">
+                <div class="option selected hide" data="whatsapp"><span class="chk"></span><label class="type">Whatsapp</label></div>
+                <div class="option selected" data="chat"><span class="chk"></span><label class="type">Chat</label></div>
+                <!--
+                <div class="option selected" data="facebook"><span class="chk"></span><label class="type">Messenger</label></div>
+                <div class="option selected" data="email"><span class="chk"></span><label class="type">Email</label></div>
+                -->
+                <div class="option" data="favorites"><span class="chk"></span><label class="type"></label></div>                
+            </div>
+        </div>                
+
+        <!-- Conversaciones -->
+        <div class="items">
+            <!-- Activas -->
+            <div class="active expanded">
+                <label class="lblActive iconExpanded"></label>
+                <div class="content">
+                    <span class="spnNoResults"></span>
+                </div>
+            </div>
+
+            <!-- Disponibles -->
+            <div class="available expanded">
+                <label class="lblAvailable iconExpanded"></label>
+                <div class="content">
+                    <span class="spnNoResults"></span>
+                </div>
+            </div>
+
+            <!-- Todas -->
+            <div class="all expanded">
+                <label class="lblByAgent"></label>
+                <div class="content">
+                    <span class="spnNoResults"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="conversation">
+        <div class="noSelection">
+            <div class="img messages"></div>
+            <span></span>
+        </div>
+
+        <div class="content">
+            <div class="header"> 
+                <div class="img whatsapp"></div>
+                <div class="info">
+                    <span class="user"></span>
+                </div>
+                <div class="actions">
+                    <i class="fa fa-search"></i>
+                    <div class="searchLine flex">
+                        <input type="text" class="txtSearchLine">
+                        <span class="count"><span class="index"></span>/<span class="total"></span></span>
+                        <i class="fa fa-chevron-up"></i>
+                        <i class="fa fa-chevron-down"></i>
+                        <i class="fa fa-times"></i>
+                    </div>
+                    <i class="fa fa-ellipsis-v"></i>
+                    <div class="menu"></div>
+                </div>
+            </div>
+
+            <!-- Mensajes -->
+            <div class="body"></div>
+            
+            <div class="divIcoDown">
+                <!-- Icono para ir hacia abajo -->
+                <i class="icoDown fa fa-chevron-down"></i>
+                <!-- # Notificacion -->
+                <i class="notifyCount"></i>
+            </div>
+            
+            <!-- Escribir nuevo mensaje -->
+            <div class="write">
+                <div class="write-body">
+                    <!-- Emoticons -->
+                    <i class="fa fa-smile-o"></i>
+
+                    <!-- Input -->
+                    <input class="txtWrite" maxlength="1500">
+                    
+                    <!-- Adjuntos -->
+                    <i class="fa fa-paperclip"></i>
+                    <input type="file" class="file" multiple>
+                </div>
+            </div>
+
+            <!-- Aceptar conversación -->
+            <div class="acceptConversation">
+                <i class="fa fa-check"></i>
+            </div>
+        </div>
+    </div>   
+</div>
+<script>
+    $OMNICHANNEL.start();
+</script>

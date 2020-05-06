@@ -1,0 +1,56 @@
+<div id="omnichannel_settings">
+
+	<!-- Mensaje de bienvenida -->
+	<div class="row">
+		<label class="lblWelcome required"></label>
+		<textarea class="welcome"></textarea>
+	</div>
+
+	<!-- Mensaje de despedida -->
+	<div class="row">
+		<label class="lblFarewell required"></label>
+		<textarea class="farewell"></textarea>
+	</div>
+
+	<!-- Mensaje al iniciar el chat fuera del horario laboral -->
+	<div class="row flex">
+		<label class="lblOutsideHours flex1"></label>
+		<input type="text" class="outsideHours flex1">
+	</div>
+
+	<!-- Vigencia de conversación por falta de respuesta del cliente -->
+	<div class="row flex">
+		<label class="lblTimeout flex1"></label>
+		<input type="text" class="txtTimeout txtClock flex1">
+	</div>
+
+	<!-- Mensaje al finalizar conversación por falta de respuesta del cliente -->
+	<div class="row flex">
+		<label class="lblTimeoutMessage flex1"></label>
+		<input type="text" class="txtTimeoutMessage flex1">
+	</div>
+    
+    <!-- Titulo del chat -->
+	<div class="row flex title">
+		<label class="lblTitleFromTicket flex1" ></label>
+		<select  class="comboOptionTitle flex1" >
+			<option></option>
+			<option>GROUP</option>
+			<option>AGENT</option>
+			<option>TICKET</option>
+		</select>
+	</div>
+	<div class="row">
+		<input class="txtTitleFromTicketValue" maxlength="250" type="text" />
+	</div>
+    
+    <!-- Guardar -->
+	<div class="buttons">
+		<div class="btnBlack mouse btnSave"></div>
+	</div>
+</div>
+
+<!-- Iniciar script -->
+<script>
+	$OMNICHANNEL_SETTINGS.start();
+</script>

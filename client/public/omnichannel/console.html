@@ -1,0 +1,89 @@
+<div id="omnichannel_console">
+	
+	<div class="header">
+		<!-- Periodo -->
+		<div class="row">
+			<label class="lblPeriod"></label>
+			<select class="period"></select>
+		</div>
+
+		<!-- Grupos -->
+		<div class="row">
+			<label class="lblGroups"></label>
+			<select class="groups"></select>
+		</div>
+	</div>
+	
+	<div class="flex">
+		<div class="contentLeft flex1">
+			<div class="row">
+				<input type="text" class="txtFind" placeholder="Buscar">
+				<label class="lblResults"><span class="visible">10</span> de <span class="total">30</span> elementos</label>
+
+				<div class="fRight options">
+					<label class="order mouse"><span class="title">Más reciente - más antiguo</span>▼</label>
+					<i class="icoColumns fa fa-cog"></i>
+					<i class="icoRefresh fa fa-refresh"></i>
+					<i class="icoRestore fa fa-undo"></i>
+				</div>
+			</div>
+
+			<table class="grid">
+				<thead>
+					<tr>
+						<td class="check"></td>
+						<td>Asignado a</td>
+						<td>Grupo asignado</td>
+						<td class="center">SLA</td>
+						<td>Ticket</td>
+						<td>Cliente</td>
+						<td>Canal</td>
+						<td>Tiempo de respuesta</td>
+						<td>Tiempo de solución</td>
+					</tr>
+				</thead>
+				<tbody> </tbody>
+			</table>
+		</div>
+
+		<div class="contentRight">
+			
+
+			<div class="actions">
+				<div class="title">
+					<span>Acciones</span>
+					<i class="fa fa-caret-down backgroundCustomed"></i>
+				</div>
+			</div>
+
+			<div class="conversation">
+				<div class="title">
+					<span>Conversación</span>
+					<i class="fa fa-caret-down backgroundCustomed"></i>
+				</div>
+				<div class="info">
+					
+					<div class="omnichannel">
+						<div class="messages">
+							<div class="date" date="2019/11/27">Hoy</div>
+							<div class="message agent backgroundCustomed dated"><span class="data">Buenos días, ¿en que le puedo ayudar?</span></div>
+							<div class="message user dated"><span class="data">Quiero imprimir mis recibos de nómina</span></div>
+							<div class="message agent backgroundCustomed dated"><span class="data">De que mes?</span></div>
+							<div class="message user dated"><span class="data">De Agosto a Noviembre</span></div>
+							<div class="message agent backgroundCustomed dated"><span class="data">Ok</span></div>
+							<div class="message agent backgroundCustomed dated"><span class="data">Un momento</span></div>
+							<div class="message user dated"><span class="data">Si gracias</span></div>
+							<div class="message agent backgroundCustomed dated"><span class="data">Se va a crear una tarea para ayudarlo</span></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</div>
+
+<script>
+    $OMNICHANNEL_CONSOLE.start();
+</script>

@@ -1,0 +1,152 @@
+<div id="omnichannel_dashboard">
+	
+	<!-- Periodo -->
+	<div class="row">
+		<label class="lblPeriod"></label>
+		<select class="period"></select>
+		
+		<!-- Canal -->
+		<label class="lblChannel"></label>
+		<select class="channel"></select>
+
+		<div class="btnGray mouse btnFullScreen" onclick="$('#omnichannelView .x-container')[0].requestFullscreen()"><i class="fa fa-arrows-alt"></i></div>		
+	</div>
+
+	<!-- Grupos -->
+	<div class="row">
+		<label class="lblGroups"></label>
+		<select class="groups"></select>
+		<select class="group"></select>
+		<select class="agent"></select>
+	</div>
+
+	<!-- Contenido -->
+	<div class="content">
+
+		<div class="row">
+			<!-- Agentes conectados -->
+			<div class="agentsConnected widget flex1">
+				<div class="title">Agentes</div>
+				<div class="data">
+					<span class="value">12</span>
+					<div class="text"><i class="fa fa-circle"></i>Conectados</div>
+				</div>
+			</div>
+
+			<!-- Atendidos -->
+			<div class="attended widget flex1">
+				<div class="title">Atendidos</div>
+				<div class="data">
+					<span class="value">29</span>
+					<div class="text">Conversaciones</div>
+				</div>
+			</div>
+
+			<!-- No atendidos -->
+			<div class="notAttended widget flex1">
+				<div class="title">No atendidos</div>
+				<div class="data">
+					<span class="value">6</span>
+					<div class="text">Conversaciones</div>
+				</div>
+			</div>		
+
+			<!-- Tiempo de espera -->
+			<div class="waitingTime widget doubleData flex2">
+				<div class="title">Tiempo de espera</div>
+				<div class="flex">
+					<div class="data">
+						<span class="value">35<span class="mini">s</span></span>
+						<div class="text">Más largo</div>
+					</div>
+					<div class="data">
+						<span class="value">20<span class="mini">s</span></span>  
+						<div class="text">Promedio</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+
+			<!-- Tiempo de respuesta -->
+			<div class="responseTime widget doubleData flex1">
+				<div class="title">Tiempo de respuesta</div>
+				<div class="flex">
+					<div class="data">
+						<span class="value">2<span class="mini">m</span> 10<span class="mini">s</span></span>
+						<div class="text">Más largo</div>
+					</div>
+					<div class="data">
+						<span class="value">30<span class="mini">s</span></span>
+						<div class="text">Promedio</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Tiempo de solución -->
+			<div class="responseTime widget doubleData flex1">
+				<div class="title">Tiempo de solución</div>
+				<div class="flex">
+					<div class="data">
+						<span class="value">23<span class="mini">m</span> 54<span class="mini">s</span></span>
+						<div class="text">Más largo</div>
+					</div>
+					<div class="data">
+						<span class="value">11<span class="mini">m</span> 36<span class="mini">s</span></span>
+						<div class="text">Promedio</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="charts">
+			
+			<div class="row">
+			
+				<!-- Efectividad promedio de respuesta -->
+				<div class="efectivenessResponse widget doubleData flex1">
+					<div class="title">Efectividad promedio de respuesta</div>
+					<div class="chart"></div>			
+				</div>
+
+				<!-- Efectividad promedio de solución -->
+				<div class="efectivenessSolution widget doubleData flex1">
+					<div class="title">Efectividad promedio de solución</div>
+					<div class="chart"></div>			
+				</div>
+			
+			</div>
+
+			<div class="row">
+			
+				<!-- Atendidas y no atendidas -->
+				<div class="chatsPie widget doubleData flex1">
+					<div class="pie"></div>
+				</div>
+
+				<!-- Conversaciones atendidas -->
+				<div class="attendedConversations widget doubleData flex1">
+					<div class="title">Conversaciones atendidas</div>
+					<div class="chart"></div>			
+				</div>
+			
+			</div>
+
+			
+
+			
+
+			<!-- Tiempo de respuesta -->
+			<div class="responseTime widget doubleData">
+				<div class="chart"></div>
+			</div>
+		</div>
+		
+	</div>
+</div>
+
+<script>
+    $OMNICHANNEL_DASHBOARD.start();
+</script>
