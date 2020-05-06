@@ -67,15 +67,14 @@ exports.getInfoEmpresa = function (req, res) {
 
 exports.saveLead = function (req, res) {
 	global.logger.info("Guardar Lead:"+ req.query.empresa+ " __ " + req.ip + "  __ "+ req.host + " __"+ req.connection.remoteAddress );
+	var PETICION  = req;
+	var INFO = req.body;//INFO
+	global.logger.info("LEAD INFO :"+ JSON.stringify(INFO));
 	if (req.body.landing == null) {
 		res.set({ 'content-type': 'application/json; charset=utf-8' });
 		res.send(500, "Campaña requerida");
 		return false;
 	}
-
-	var PETICION  = req;
-	var INFO = req.body;//INFO
-	global.logger.info("LEAD INFO :"+ JSON.stringify(INFO));
 	if (INFO.nombre && INFO.email && INFO.telefono && INFO.landing && INFO.empresa) {
 
 		//GUARDAR LED Base de datos empresarial.
