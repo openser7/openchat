@@ -284,7 +284,7 @@ html.menuFixed #divChat.maximized {width: calc(100% - 225px);}
 #divChat .header .fa.restore { display: none; }
 #divChat.minimized .header .fa.minimize, #divChat.maximized .header .fa.maximize {display: none;}
 #divChat.minimized .header .minimize:before {/* content: "\f2d2" !important; */} /*f2d0*/
-#divChat.loading .header .minimize, #divChat.loading .header .maximize, #divChat.loading .header .restore {display: none !important;}
+#divChat.loading .header .minimize, #divChat.loading .header .maximize, #divChat.loading .header .restore {}
 #divChat .body {height: 325px;transition: 0.3s ease-in;height: calc(100% - 44px);}
 #divChat.maximized .body {/* height: calc(100% - 44px); */display: block !important;}
 #divChat .body .messages {height: calc(100% - 48px);padding: 7px;overflow-y: auto;}

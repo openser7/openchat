@@ -782,7 +782,7 @@ $OMNICHANNEL = {
 				item.noSort = true;
 				if (item.client.id != socketOmnichannel.user._id)
 					ctrl.addConversation(item);
-				// _$('badgeOmnichannel').addTotalMessage(1)
+				// //_$('badgeOmnichannel').addTotalMessage(1)
 			});
 			ctrl.sortConversations();
 		}
@@ -1077,31 +1077,7 @@ $OMNICHANNEL = {
 
 					// Obtener los agenetes del grupo
 					var idClient = 0;
-					if(_$('gridConsoleIncidents')){
-						idCliente = _$('gridConsoleIncidents').getSelection()[0].data.idCliente;
-					} 
-					else { 
-						idClient = clienteObj.IdCliente;
-					}
-
-					SVC({
-						Url: getUrl('Agente', 'ConsultarCombo?idGrupo=' + idGroup + '&idAgente=' + localStorage.IdAgente +
-							'&idPerfil=' + localStorage.IdPerfil + '&idCliente=' + idClient + '&page=1&start=0&limit=10000'),
-						Funcion: function (response) {
-							var jAgents = [];
-							response.Lista.forEach(function (item) {
-								jAgents.push({ idAgent: item.Id, idUser: item.IdUsuario, name: item.Descripcion });
-							});
-
-							// Verificar que agente del grupo está disponible y elegir al que tenga el menor número de chats activos
-							var idUser_assigned = $chat.attr("idUser_assigned"); // A este usuario se le dará preferencia en la asignación automática
-							if(idUser_assigned == idUser_client) idUser_assigned = null; // No puede ser el mismo cliente y agente
-							socketOmnichannel._emit('automatic assign', {
-								conversationID: conversationID, jAgents: jAgents,
-								idGroup: idGroup, idUser_client: idUser_client, idUser_assigned: idUser_assigned
-							});
-						}
-					});
+					
 				}
 			}
 
@@ -1557,7 +1533,7 @@ $OMNICHANNEL = {
 		//Sin agente pero con usuario, de ayuda general
 		else if (data.ticket) {
 			var idT = data.ticket.slice(3);
-			getService({
+			/*getService({
 				Url: getUrl('Omnichannel', 'ValidarEnvioMensaje?idIncidente=' + idT + '&idAgente=' + localStorage.IdAgente),
 				Metodo: 'GET',
 				Datos: data,
@@ -1578,7 +1554,7 @@ $OMNICHANNEL = {
 					$view.find(".conversation .content").unloading();
 					warning(response.msg);
 				}
-			});
+			});*/
 		} else if (data.agent && !data.agent.name && data.user) {
 			if ($OMNICHANNEL_PERMISO) {
 				notificacion({
@@ -1611,8 +1587,8 @@ $OMNICHANNEL = {
 		}];
 		agregarElementos(actualizacion, 'pnlNotifications');
 		*/
-		_$('notificationsEmtpyLabel').hide();
-		_$('badge-notifications').addTotalNotifications(1);
+		//_$('notificationsEmtpyLabel').hide();
+		//_$('badge-notifications').addTotalNotifications(1);
 
 		$NOTIFICATIONS.add({ type: "OMNICHANNEL", text: texto });
 	},
@@ -1987,7 +1963,7 @@ $OMNICHANNEL = {
 		function _afterShow() {
 			$txtWrite.focus();
 			ctrl.chat_scrollEnd();
-			//_$('chat-badge').clear();
+			////_$('chat-badge').clear();
 			ctrl.chat_messagesUnread_setReaded();
 		}
 
@@ -2157,8 +2133,8 @@ $OMNICHANNEL = {
 			var txtFinished = lang.conversation_finished.toUpperCase();
 			html = '<div class="bigMessage conversation_ended">' + txtFinished + '</div>';
 
-			if ($("#divChat").is(":visible") && !$("#divChat .body").is(":visible"))
-				_$('chat-badge').addTotalMessage(1);
+			//if ($("#divChat").is(":visible") && !$("#divChat .body").is(":visible"))
+				//_$('chat-badge').addTotalMessage(1);
 		}
 		else if (data.ticketRegistered) {
 			var _class = "";
@@ -2559,7 +2535,7 @@ $OMNICHANNEL = {
 
 		if (!$("#divChat .body").is(":visible")) {
 			// Mostrar notificación
-			_$('chat-badge').addTotalMessage(1);
+			//_$('chat-badge').addTotalMessage(1);
 			ctrl.notification({ body: message.message, from: "agent" });
 		}
 		else {
@@ -2610,7 +2586,7 @@ $OMNICHANNEL = {
 		$body.slideDown();
 		$txtWrite.focus();
 		ctrl.chat_scrollEnd();
-		_$('chat-badge').clear();
+		//_$('chat-badge').clear();
 
 		/*
 		setTimeout(function(){
@@ -2873,7 +2849,7 @@ $OMNICHANNEL = {
 			$chat.addClass("finished");
 		}
 		else {
-			_$('chat-badge').clear();
+			//_$('chat-badge').clear();
 		}
 	},
 
@@ -2983,31 +2959,31 @@ $OMNICHANNEL = {
             TiempoDedicado: timeSpent
         }
         
-        var $consult = _$("incident_consult");
-        var jData = {
-            Url: getUrl('Actividad', 'Guardar'),
-            Metodo: 'POST',
-            Datos: datos,
-            Funcion: function (response) {
-            	console.log(lang.activity_added);
+        // var $consult = //_$("incident_consult");
+        // var jData = {
+        //     Url: getUrl('Actividad', 'Guardar'),
+        //     Metodo: 'POST',
+        //     Datos: datos,
+        //     Funcion: function (response) {
+        //     	console.log(lang.activity_added);
 
-            	// Recargar info si está en la pantalla del mismo ticket y no tiene agente asignado
-            	$consult = _$("incident_consult");
-            	if($consult){
-            		var dataIncident = $consult.dataIncident;
-            		if(data.idTicket == dataIncident.IdIncidente && !dataIncident.Agente.IdAgente){
-            			$consult.controller.reloadIncidentGeneral();
-            		}
-            	}
-            }
-        }
+        //     	// Recargar info si está en la pantalla del mismo ticket y no tiene agente asignado
+        //     	$consult = //_$("incident_consult");
+        //     	if($consult){
+        //     		var dataIncident = $consult.dataIncident;
+        //     		if(data.idTicket == dataIncident.IdIncidente && !dataIncident.Agente.IdAgente){
+        //     			$consult.controller.reloadIncidentGeneral();
+        //     		}
+        //     	}
+        //     }
+        // }
         if($consult) jData.$mask = $consult;
         getService(jData);
     },
 
 	chat_messagesUnreadCount_result: function (data) {
 		console.log("chat_messagesUnreadCount_result");
-		_$('chat-badge').clear().addTotalMessage(data.countUnread);
+		//_$('chat-badge').clear().addTotalMessage(data.countUnread);
 	},
 
 	chat_setInfo: function (data) {
@@ -3229,6 +3205,7 @@ $OMNICHANNEL = {
 
 	// Verificar si es un agente y si tiene acceso al omnichannel para poder asignarle un chat
 	assignableAgent: function () {
+		return false;
 		if (!isAgent()) return false;
 		if (!localStorage.menu) return;
 
@@ -3324,7 +3301,7 @@ $OMNICHANNEL = {
 			resolveDescription: description,
 			afterFn: function(){
 				$view.unloading();
-				_$("tabpanel_TicketUnsolved").setActiveTab(2);
+				//_$("tabpanel_TicketUnsolved").setActiveTab(2);
 			}
 		});
 	}
