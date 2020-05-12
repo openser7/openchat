@@ -454,3 +454,6 @@ background-size: 18px; background-repeat: no-repeat;background-position-x: 95%;b
 .emoticons .content .icons .category {
     height: 5px;
 }
+.backgroundCustomed {
+    background-color: #005faa;
+}

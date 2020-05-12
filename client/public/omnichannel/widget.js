@@ -341,7 +341,6 @@ function socket () {
 
 function init() {
     loadScript("https://kit.fontawesome.com/8f2e00ef0a.js");
-    loadScript(rutabase+ '/js/omnichannel.js');
     loadCss(rutabase+ '/css/omnichannel.css');
 
     console.log("Se inicio el script del wdiget del omnichanel");
@@ -351,7 +350,7 @@ function init() {
         case 2: loadScript(rutabase + '/js/language-en.js');
             break;
     };
-    socket();//Conexion
+    loadScript(rutabase+ '/js/omnichannel.js', socket());
 }
 
 function validDate() {
@@ -359,18 +358,23 @@ function validDate() {
         return true;
 }
 
-function loadScript(route) {
+function loadScript(route, callback) {
+    var head = document.getElementsByTagName('head')[0];
     var oc_JS = document.createElement('script');
     oc_JS.type = 'text/javascript';
-    oc_JS.src = route + '?t=' + Date.now();
-    (document.body ? document.body : document.getElementsByTagName('head')[0]).appendChild(oc_JS);
+    oc_JS.src = route ;
+    //oc_JS.src = oc_JS.src + '?t=' + Date.now();
+    head.appendChild(oc_JS);
+    if(typeof callback == "function" )
+    oc_JS.onload = callback();
 }
 function loadCss(route) {
+    var head = document.getElementsByTagName('head')[0];
     var oc_CSS = document.createElement('link');
     oc_CSS.type = 'text/css';
     oc_CSS.rel = 'stylesheet';
     oc_CSS.href = route + '?t=' + Date.now();
-    (document.body ? document.body : document.getElementsByTagName('head')[0]).appendChild(oc_CSS);
+    head.appendChild(oc_CSS);
 }
 
 function getLenguaje() {

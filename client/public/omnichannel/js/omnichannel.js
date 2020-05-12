@@ -342,7 +342,7 @@ $OMNICHANNEL = {
 				event.preventDefault();
 
 			// Enter al enviar mensajes desde el agente
-			if (isEnter() && text) {
+			if (event.keyCode = 13 && text) {
 				// Agregar el mensaje
 				console.log("Enter agent message");
 				var conversation = $view.find(".items .item.selected");
@@ -1975,7 +1975,7 @@ $OMNICHANNEL = {
 				event.preventDefault();
 
 			// Enter al enviar mensajes desde el chat
-			if (isEnter() && text) {
+			if (event.keyCode ==13 && text) {
 				// Agregar el mensaje
 				console.log("Enter chat message");
 				var userData = socketOmnichannel.user;
