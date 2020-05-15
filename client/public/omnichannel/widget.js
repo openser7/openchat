@@ -1,11 +1,17 @@
 var rutabase = "https://empresarial.openser.com/public/omnichannel";
 var socketOmnichannel = null, Enterprise = 'Desarrollo', urlSocket = "https://empresarial.openser.com:81";
 
+
 var _NombreCompleto = "Sin nombre";
 var _Imagen = "";
-var _CveUsuario = "Sin nombre";
+var _CveUsuario = "User anonimo";
+var _IdUsuario = 1 ;//Representa usuario anonimo
+var _source="widget";
+_source ="openser";
 
-
+function ErrorEnConexion(){
+    console.log("Error de conexion, recarga el chat");
+}
 function socket () {
 
     socketOmnichannel = io.connect(urlSocket, {
@@ -45,9 +51,15 @@ function socket () {
     }
     
     socketOmnichannel.on('connect', function () {            
+        //Hay metodos que mas adelante usan las mismas variables como idUsuario
+        localStorage.IdUsuario = _IdUsuario;
+        localStorage.idEnterprise =Enterprise;
+        localStorage.NombreCompleto = _NombreCompleto;
+        localStorage.source=_source;
+
         console.log('%cSocket Omnichannel ID: ' + socketOmnichannel.id, 'color: #008000');
         var data = { openser: _CveUsuario, idEnterprise: Enterprise, name: _NombreCompleto, 
-            socket: socketOmnichannel.id, idUser: 0, isAgent: false, image:_Imagen }
+            socket: socketOmnichannel.id, idUser: _IdUsuario, isAgent: false, image:_Imagen }
         socketOmnichannel._emit('socket connected', data);
 
         //if(_$("omnichannel_dashboard"))
@@ -204,7 +216,7 @@ function socket () {
 
         // Consultar los mensajes sin leer del cliente
         if($('.icoOmnichannel').hide() && !$("body #divChat .body").is(":visible")){
-            socketOmnichannel._emit('chat_messagesUnreadCount', { source: "openser", sender: { id: socketOmnichannel.user._id } });
+            socketOmnichannel._emit('chat_messagesUnreadCount', { source: localStorage.source, sender: { id: socketOmnichannel.user._id } });
         }
 
         // Al conectarse el agente verificar si hay chats con ticket sin asignar para ver si se puede asignar automaticamente

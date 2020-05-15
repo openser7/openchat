@@ -1,3 +1,41 @@
+localStorage.source = "widget";
+JSON.tryParse = function(str){
+    try {
+        return JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+}
+
+String.prototype.matchAny = function(array) {
+    var match = false,
+        str = this;
+    if (typeof array != "object") return false;
+    array.forEach(function(item) {
+        if (str == item) {
+            match = true;
+            return;
+        }
+    });
+    return match;
+}
+
+function uuidv4() {
+	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+	  var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+	  return v.toString(16);
+	});
+  }
+
+  
+  function getDateStringToDate(str){
+	
+	return {
+		dateObj : new Date()
+	}
+}
+
+
 $OMNICHANNEL = {
 	pendingAgentMsg: [],
 	pendingChatMsg: [],
@@ -1868,7 +1906,7 @@ $OMNICHANNEL = {
 
 		setTimeout(function () {
 			socketOmnichannel._emit('getConversation', {
-				source: "openser", idUser: localStorage.IdUsuario, chat: true,
+				source: localStorage.source, idUser: localStorage.IdUsuario, chat: true,
 				ticket: data.ticket, idGroup: data.idGroup, idAgent: data.idAgent,
 				idUser_agent: data.idUser_agent, idUser_client: data.idUser_client
 			});
@@ -1877,7 +1915,7 @@ $OMNICHANNEL = {
 
 	chat_finish: function () {
 		var $chat = $("body #divChat");
-		var ticket, conversationID, jEmit = { source: "openser", user: "client" };
+		var ticket, conversationID, jEmit = { source: localStorage.source, user: "client" };
 		if ($chat.length) {
 			ticket = $chat[0].data ? $chat[0].data.ticket : null;
 			conversationID = $chat.attr("conversationid");
@@ -1982,7 +2020,7 @@ $OMNICHANNEL = {
 				if (userData && userData._id){
 					var sender = $chat.attr("sender");
 					ctrl.addMessage({
-						text: text, mediaURL: "", register: true, source: "openser", type: "chat", isChat: true,
+						text: text, mediaURL: "", register: true, source: localStorage.source, type: "chat", isChat: true,
 						sender: sender, sender_idUser: userData.idUser
 					});
 					$txtWrite.val("");
