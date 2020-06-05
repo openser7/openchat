@@ -5,7 +5,7 @@ var socketOmnichannel = null, Enterprise = 'Desarrollo', urlSocket = "https://em
 var _NombreCompleto = "Sin nombre";
 var _Imagen = "";
 var _CveUsuario = "User anonimo";
-var _IdUsuario = 1;//Representa usuario anonimo
+var _IdUsuario = 0;//Representa usuario anonimo
 var _source = "widget";
 
 JSON.tryParse = function (str) {
@@ -158,14 +158,100 @@ function uuidv4() {
     });
 }
 
+ // Obtener hace cuantos dias fue la fecha recibida
+ function onGetDays(_date) {
+    var fechaActual = new Date();
+    var fechaCreacion;
+    if (typeof _date != "object") {
+        fechaCreacion = new Date(eval(_date.replace(/\//g, '').replace('Date(', '').replace(')', '')));
+    } else {
+        //set 0 hora minutos y segunsos
+        fechaCreacion = new Date(_date.getTime());
 
-function getDateStringToDate(str) {
+        fechaCreacion.setHours(0);
+        fechaCreacion.setMinutes(0);
+        fechaCreacion.setSeconds(0);
+        fechaCreacion.setMilliseconds(0);
 
-    return {
-        dateObj: new Date()
+        fechaActual.setHours(0);
+        fechaActual.setMinutes(0);
+        fechaActual.setSeconds(0);
+        fechaActual.setMilliseconds(0);
     }
-}
+    var openDias = null;
 
+    var fechasuma = fechaActual - fechaCreacion;
+    if (fechaActual == fechaCreacion) {
+        openDias = 0;
+    } else {
+        openDias = Math.floor(fechasuma / (1000 * 60 * 60 * 24));
+    }
+    return openDias;
+}
+function getDateStringToDate(str){
+    var date;
+
+    // Formato yyyy/MM/dd
+    var isFormat01 = false;
+    if(typeof str == "string"){
+        var format01 = str.match(/(\d{4}\/\d{2}\/\d{2})/g);
+        isFormat01 = Boolean(format01 && format01[0] == str);
+    }        
+
+    // Validar si el formato es ISO 8601
+    var formats = [moment.ISO_8601, "MM/DD/YYYY  :)  HH*mm*ss"];
+    var isISO = moment(str, formats, true).isValid();
+
+    if((isISO && typeof str == "string") || isFormat01){
+        date = new Date(str);
+    }
+    else {
+        var dateStr = str, offset = false;
+        if (typeof str == "object") {
+            dateStr = str.dateStr;
+            offset = str.offset != null ? str.offset : offset;
+        }
+
+        date = str instanceof Date ? str : new Date(+dateStr.match(/[0-9]+/)[0]);
+    }
+
+    // Hace cuánto tiempo
+    var daysAgo = onGetDays(date);
+    daysAgoStr = localStorage.IdIdioma == 1 ? "Hace " + daysAgo + " días" : daysAgo + " days ago";
+    if (daysAgo <= 0)
+        daysAgoStr = lang.today;
+    if (daysAgo == 1)
+        daysAgoStr = lang.yesterday;
+    
+    var dateFormat = moment(date, lang.format_date);
+    var time12 = date.toString('hh:mm tt');
+    
+    // Última actualización del chat. 
+    // Si es hoy mostrar la hora, si es esta semana mostrar el dia, sino mostrar la fecha.
+    var todayIndex = new Date().getDay();
+    var chat_lastUpdate = daysAgo2 = "";
+    if (daysAgo <= 0){
+        chat_lastUpdate = date.toString('h:mm tt'); // Si es de hoy mostrar la hora
+        daysAgo2 = lang.today;
+    }
+    else if (daysAgo == 1) chat_lastUpdate = daysAgo2 = lang.yesterday; // Ayer
+    else if(todayIndex - daysAgo > 0) chat_lastUpdate = daysAgo2 = lang.arrDays[todayIndex-daysAgo-1]; // Mostrar día de la semana actual
+    else chat_lastUpdate = daysAgo2 = v = dateFormat; // Fecha
+
+
+    var response = {
+        chat_lastUpdate: chat_lastUpdate,
+        dateObj: date,
+        date: dateFormat,
+        dateISO: date.toString("yyyy-MM-dd"),
+        daysAgo2: daysAgo2,
+        time24: date.toString('HH:mm'),
+        time12: time12,
+        daysAgoStr: daysAgoStr,
+        fullDateStr: moment(date, lang.format_date + ' g:i A')
+    };
+    return response;
+}
 $confirm = function (title, msg, fn) {
     var x = confirm(title + "  " + msg);
     if (x) fn("yes");
@@ -215,7 +301,7 @@ function socket() {
 
     socketOmnichannel.on('connect', function () {
         //Hay metodos que mas adelante usan las mismas variables como idUsuario
-        localStorage.IdUsuario = _IdUsuario;
+        localStorage.IdUsuario =localStorage.IdUsuario ? localStorage.IdUsuario:  _IdUsuario;
         localStorage.idEnterprise = Enterprise;
         localStorage.NombreCompleto = _NombreCompleto;
         localStorage.source = _source;
@@ -224,7 +310,7 @@ function socket() {
         var data = {
             openser: _CveUsuario, idEnterprise: Enterprise, name: _NombreCompleto,
             source: _source, 
-            socket: socketOmnichannel.id, idUser: _IdUsuario, isAgent: false, image: _Imagen
+            socket: socketOmnichannel.id, idUser: localStorage.IdUsuario , isAgent: false, image: _Imagen
         }
         socketOmnichannel._emit('socket connected', data);
 
@@ -520,24 +606,27 @@ function socket() {
 
 function init() {
     loadScript("https://kit.fontawesome.com/8f2e00ef0a.js");
+    loadScript("https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment-with-locales.min.js",asignarLenguaje,1000);
     loadCss(rutabase + '/css/omnichannel.css');
 
     console.log("Se inicio el script del wdiget del omnichanel");
+    
+    loadScript(rutabase + '/js/omnichannel.js', socket, 3000);
+}
+function asignarLenguaje(){
     switch (getLenguaje()) {
         case 1: loadScript(rutabase + '/js/language-es.js');
             break;
         case 2: loadScript(rutabase + '/js/language-en.js');
             break;
     };
-    loadScript(rutabase + '/js/omnichannel.js', socket, 10000);
 }
-
 function validDate() {
     if (Date.now() == Date.now())
         return true;
 }
 
-function loadScript(route, callback, timeSleep) {
+function loadScript(route, callback, timeSleep) { 
     var head = document.getElementsByTagName('head')[0];
     var oc_JS = document.createElement('script');
     oc_JS.type = 'text/javascript';
@@ -560,10 +649,15 @@ function loadCss(route) {
 }
 
 function getLenguaje() {
-    if (navigator.language.indexOf("es") > 0)
+    if (navigator.language.indexOf("es") >= 0){
+        localStorage.IdIdioma = "1";  
+        moment.locale('es');  
         return 1;
-    else
+    }
+    else{ localStorage.IdIdioma = "2";    
+        moment.locale('en');
         return 2;
+    }
 
 }
 if (validDate())
