@@ -412,8 +412,8 @@ $OMNICHANNEL = {
 			else {
 				// Crear div emoticons
 				$.ajax({
-					url: localStorage.rutaBase + "app/store/Emoticons.json",
-					dataType: 'script',
+					url: localStorage.rutaBase + "/emoticons.json",
+					dataType: 'json',
 					success: function (strData) {
 						console.log("Emoticons loaded");
 
@@ -426,7 +426,7 @@ $OMNICHANNEL = {
 						'</div>');
 						$("body").append($emoticons);
 
-						var data = JSON.parse(strData);
+						var data = strData;
 						var categories = data[0].categories;
 
 						var html = "";
