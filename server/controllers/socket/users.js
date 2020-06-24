@@ -248,7 +248,7 @@ exports.logOff = function (localStorage, socket, callback) {
  */
 exports.deleteSocketMobile = function (localStorage, callback) {
     if (global.debug) console.log('Eliminar el socket mobile de :' + localStorage.NombreCompleto);
-    this.findById(localStorage._id, function (err, user) {
+    this.findByCveUsuario(localStorage, function (err, user) {
         if (err) console.log("Al borrar socketMobile:" + err);
         else {
             if (user) {
