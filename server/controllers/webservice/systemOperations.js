@@ -3,6 +3,7 @@ var userModel = mongoose.model('user');
 var mailer = require('nodemailer');
 var fs = require('fs');
 var path = require('path');
+var geoip = require('geoip-lite');
 
 var DynamicsWebApi = require('dynamics-web-api');
 var AuthenticationContext = require('adal-node').AuthenticationContext;
@@ -34,7 +35,7 @@ if (debug) {
 exports.getInfoEmpresa = function (req, res) {
 	
 	if (req.query && req.query.empresa) {
-		global.logger.info("Se Requirio la informacion de la empresa:"+ req.query.empresa+ " __ " + req.ip + "  __ "+ req.host + " __"+ req.connection.remoteAddress );
+		//global.logger.info("Se Requirio la informacion de la empresa:"+ req.query.empresa+ " __ " + req.ip + "  __ "+ req.host + " __"+ req.connection.remoteAddress );
 		if (global.config.debug) console.log("Get Info - " + req.query.empresa);
 		var query = ' select Cliente.*, IdGoogle as GoogleId, Google.Secreto as GoogleSecret,' +
 			' FolderWeb ,' +
@@ -207,6 +208,8 @@ exports.saveLead = function (req, res) {
 					mailOptions.html += "<br> <b>Landing : </b>" + INFO.landing;
 					mailOptions.html += "<br> <b>DynamicsLead : </b>  <a href='" + link + "'>Link</a>";
 					mailOptions.html += "<br><br><br><br><br><br><br><br><br> " +ARMARTRACKING.rawHeaders.toString() ;
+					mailOptions.html += "<br>Referrer : "+ INFO.referrer;
+					mailOptions.html += "<br> GEO : " + JSON.stringify(geoip.lookup(ARMARTRACKING.rawHeaders[1]));
 					mailOptions.from = "info@openser.com";
 					mailOptions.to = correoPrincipal;
 					mailOptions.cc = correoscopiados;
@@ -265,6 +268,8 @@ exports.saveLead = function (req, res) {
 					mailOptions.html += "<br> <b>Landing : </b>" + INFO.landing;
 					mailOptions.html += "<br> <b>DynamicsLead : </b>" + error.message ;
 					mailOptions.html += "<br><br><br><br><br><br><br><br><br> " +ARMARTRACKING.rawHeaders.toString() ;
+					mailOptions.html += "<br>Referrer : "+ INFO.referrer;
+					mailOptions.html += "<br> GEO : " + JSON.stringify(geoip.lookup(ARMARTRACKING.rawHeaders[1]));
 					mailOptions.from = "info@openser.com";
 					mailOptions.to = correoPrincipal;
 					mailOptions.cc = correoscopiados;
