@@ -7,17 +7,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <!-- Google Analytics -->
     <script>
-        window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+        window.ga = window.ga || function () { (ga.q = ga.q || []).push(arguments) }; ga.l = +new Date;
         ga('create', 'UA-92820129-1', 'auto');
         ga('send', 'pageview');
-ga('clientTracker.send', 'pageview');
-        </script>
-        <script async src='https://www.google-analytics.com/analytics.js'></script>
-        <!-- End Google Analytics -->
+        ga('clientTracker.send', 'pageview');
+    </script>
+    <script async src='https://www.google-analytics.com/analytics.js'></script>
+    <!-- End Google Analytics -->
     <title>Get OpenSer</title>
     <script src="https://www.google.com/recaptcha/api.js?render=6LexaOIUAAAAAKxLYJHGjGal4W74xxANV_8DCI1x"></script>
 
@@ -43,7 +43,8 @@ ga('clientTracker.send', 'pageview');
                 </div>
                 <div class="form-group col-md-6">
                     <label for="inputTelefono">Teléfono</label>
-                    <input type="Telefono" class="form-control" id="inputTelefono" placeholder="Teléfono" type="tel" required>
+                    <input type="Telefono" class="form-control" id="inputTelefono" placeholder="Teléfono" type="tel"
+                        required>
                     <div class="invalid-tooltip">
                         Teléfono requerido.
                     </div>
@@ -96,7 +97,8 @@ ga('clientTracker.send', 'pageview');
                     <input class="form-check-input" type="checkbox" id="checkTermCond" required>
                     <label class="form-check-label" for="gridCheck">
                         Acepto los
-                        <a href="https://www.openser.com/aviso-de-privacidad/" target="_blank">términos y condiciones</a> de uso.
+                        <a href="https://www.openser.com/aviso-de-privacidad/" target="_blank">términos y
+                            condiciones</a> de uso.
                     </label>
                     <div class="invalid-feedback">
                         Es necesario aceptar los terminos y condiciones.
@@ -111,9 +113,11 @@ ga('clientTracker.send', 'pageview');
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://www.openser.com/wp-includes/js/jquery/jquery.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
         crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script>
     <script>
 
@@ -197,25 +201,25 @@ ga('clientTracker.send', 'pageview');
             if (validacion) {
                 if (jQuery('#checkTermCond')[0].checked) {
                     jQuery('#send').prop('disabled', true);
-                    
-                    grecaptcha.execute('6LexaOIUAAAAAKxLYJHGjGal4W74xxANV_8DCI1x', {action: 'homepage'}).then(function(token) {
-                        var data  = {};
+
+                    grecaptcha.execute('6LexaOIUAAAAAKxLYJHGjGal4W74xxANV_8DCI1x', { action: 'homepage' }).then(function (token) {
+                        var data = {};
                         data.captcha = token;
 
-                        fetch('/lead/valid',{
-                        method: 'POST',
-                        headers:{
+                        fetch('/lead/valid', {
+                            method: 'POST',
+                            headers: {
                                 'Accept': 'application/json, text/plain, */*',
                                 'Content-Type': 'application/json'
-                        },
-                        body:JSON.stringify(data)
+                            },
+                            body: JSON.stringify(data)
                         }).then(res => res.json()).then(data => {
                             console.log("msg: " + data.msg + ", success?: " + data.success + ", score: " + data.score);
-                            if(data.success == true ){
+                            if (data.success == true) {
                                 jQuery.ajax({
                                     method: "POST",
                                     timeout: 300000,//5min
-                                    url: "https://empresarial.openser.com/lead/save",
+                                    url: location.origin + "/lead/save",
                                     data: {
                                         "nombre": jQuery('#inputNombre').val(),
                                         "empresa": jQuery('#inputEmpresa').val(),
@@ -223,6 +227,7 @@ ga('clientTracker.send', 'pageview');
                                         "email": jQuery('#inputEmail').val(),
                                         "telefono": jQuery('#inputTelefono').val(),
                                         "numempleado": jQuery('#selectNumEmpleados').val(),
+                                        "referrer": document.referrer,
                                         "landing": landing //Enviar de cual landing es 
                                     },
                                     beforeSend: function (xhr) {
@@ -245,17 +250,17 @@ ga('clientTracker.send', 'pageview');
                                         console.log("Service guardado con exito", data);
                                     }
                                 }).fail(function (err) {
-                                    console.log(err.responseText);
+                                    console.log(err.responseText ? err.responseText : err.statusText);
                                     jQuery('#send').prop('disabled', false);
-                                    alert('Ocurrio un error:' + err.responseText); 
+                                    alert('Ocurrio un error:' + err.responseText ? err.responseText : err.statusText);
                                 });
                             } else {
                                 alert.log("msg: " + data.msg + ", success?: " + data.success + ", score: " + data.score);
                             }
-                        }); 
+                        });
 
                     });
-                    
+
                 }
 
 
