@@ -1,0 +1,6 @@
+﻿Uninstalling assembly 'C:\openchat\server\daemon\openser.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\openchat\server\daemon\openser.InstallLog
+   assemblypath = C:\openchat\server\daemon\openser.exe
+No public installers with the RunInstallerAttribute.Yes attribute could be found in the C:\openchat\server\daemon\openser.exe assembly.

@@ -100,7 +100,7 @@ exports.connectUser = function (localStorage, socket, callback) {
             } else {                
                 userModel.sockets.push(socketActual);  // Misma session 
             }
-            if (localStorage.Mobile == "true") {      // Mobile
+            if (localStorage.Mobile == "true") {      // Mobile => ERROR NO ENTRAN DESDE ANDROID
                 if (userModel.socketMobile != null && userModel.socketMobile != undefined) {
                     if (inRoom(userModel.socketMobile, userModel.Enterprise)) {
                         io.to(userModel.socketMobile).emit('session iniciada previamente cerrar');

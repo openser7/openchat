@@ -619,12 +619,17 @@ function init() {
     loadScript(rutabase + '/js/omnichannel.js', socket, 3000);
 }
 function asignarLenguaje() {
+    var dias = function (){
+    lang.arrDays = [lang.monday, lang.tuesday, lang.wednesday, lang.thursday, lang.friday, lang.saturday, lang.sunday ];
+    }
     switch (getLenguaje()) {
-        case 1: loadScript(rutabase + '/js/language-es.js');
+        case 1: loadScript(rutabase + '/js/language-es.js', dias);
             break;
-        case 2: loadScript(rutabase + '/js/language-en.js');
+        case 2: loadScript(rutabase + '/js/language-en.js', dias);
             break;
     };
+    
+
 }
 function validDate() {
     if (Date.now() == Date.now())
